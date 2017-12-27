@@ -48,16 +48,22 @@ final class PipeBootstrap implements BootstrapInterface
                 );
             }
         }
-        $bootstrapRegistry->add(PipeConfig::class, $pipeConfigurator->getPipeConfig());
+        $bootstrapRegistry->addService(PipeConfig::class, $pipeConfigurator->getPipeConfig());
     }
 
-    private function addDefaults(PipeConfigurator $pipeConfigurator)
+    /**
+     * @param PipeConfigurator $pipeConfigurator
+     */
+    private function addDefaults(PipeConfigurator $pipeConfigurator) : void
     {
-        //TODO add Default Pipes
+
     }
 
+    /**
+     * @param ServiceManagerConfigurator $serviceManagerConfigurator
+     */
     public function configureServiceManager(ServiceManagerConfigurator $serviceManagerConfigurator): void
     {
-        // TODO: Implement configureServiceManager() method.
+
     }
 }

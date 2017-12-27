@@ -20,6 +20,8 @@ use KiwiSuite\ApplicationHttp\Bootstrap\RouteBootstrap;
 use KiwiSuite\ApplicationHttp\Factory\ApplicationFactory;
 use KiwiSuite\ApplicationHttp\Middleware\Factory\MiddlewareSubManagerFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
+use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
+use KiwiSuite\ApplicationHttp\Route\RouteConfig;
 use KiwiSuite\Config\Bootstrap\ConfigBootstrap;
 use KiwiSuite\ServiceManager\ServiceManager;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
@@ -48,7 +50,10 @@ final class HttpApplication implements ApplicationInterface
     {
         /** @var ServiceManager $serviceManager */
         $serviceManager = (new Bootstrap())->bootstrap($this->bootstrapDirectory, $this);
-        ($serviceManager->build(Application::class))->run();
+        ($serviceManager->build(Application::class, [
+            PipeConfig::class => $serviceManager->get(PipeConfig::class),
+            RouteConfig::class => $serviceManager->get(RouteConfig::class)
+        ]))->run();
     }
 
     /**

@@ -46,7 +46,7 @@ final class RouteBootstrap implements BootstrapInterface
                 );
             }
         }
-        $bootstrapRegistry->add(RouteConfig::class, $routeConfigurator->getRouteConfig());
+        $bootstrapRegistry->addService(RouteConfig::class, $routeConfigurator->getRouteConfig());
     }
 
     public function configureServiceManager(ServiceManagerConfigurator $serviceManagerConfigurator): void
