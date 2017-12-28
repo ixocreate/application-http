@@ -18,6 +18,8 @@ use KiwiSuite\Application\IncludeHelper;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
+use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
+use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 
 final class PipeBootstrap implements BootstrapInterface
 {
@@ -56,7 +58,8 @@ final class PipeBootstrap implements BootstrapInterface
      */
     private function addDefaults(PipeConfigurator $pipeConfigurator) : void
     {
-
+        $pipeConfigurator->addRoutingPipe(ImplicitHeadMiddleware::class);
+        $pipeConfigurator->addRoutingPipe(ImplicitOptionsMiddleware::class);
     }
 
     /**

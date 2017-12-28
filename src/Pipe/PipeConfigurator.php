@@ -44,7 +44,7 @@ final class PipeConfigurator
      * @param string $middleware
      * @param int $priority
      */
-    public function addGlobalPipe(string $middleware, int $priority = 100): void
+    public function addGlobalMidPipe(string $middleware, int $priority = 100): void
     {
         //TODO Check Middleware
         $this->globalQueue->insert($middleware, $priority);

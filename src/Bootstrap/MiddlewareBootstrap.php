@@ -15,8 +15,12 @@ use KiwiSuite\Application\ApplicationConfig;
 use KiwiSuite\Application\Bootstrap\BootstrapInterface;
 use KiwiSuite\Application\Bootstrap\BootstrapRegistry;
 use KiwiSuite\Application\IncludeHelper;
+use KiwiSuite\ApplicationHttp\Middleware\Factory\ImplicitHeadMiddlewareFactory;
+use KiwiSuite\ApplicationHttp\Middleware\Factory\ImplicitOptionsMiddlewareFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareServiceManagerConfig;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
+use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
+use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 
 final class MiddlewareBootstrap implements BootstrapInterface
 {
@@ -54,6 +58,8 @@ final class MiddlewareBootstrap implements BootstrapInterface
 
     private function addDefaults(ServiceManagerConfigurator $serviceManagerConfigurator) : void
     {
+        $serviceManagerConfigurator->addFactory(ImplicitHeadMiddleware::class, ImplicitHeadMiddlewareFactory::class);
+        $serviceManagerConfigurator->addFactory(ImplicitOptionsMiddleware::class, ImplicitOptionsMiddlewareFactory::class);
     }
 
     public function configureServiceManager(ServiceManagerConfigurator $serviceManagerConfigurator): void
