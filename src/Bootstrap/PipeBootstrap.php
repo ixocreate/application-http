@@ -67,6 +67,5 @@ final class PipeBootstrap implements BootstrapInterface
      */
     public function configureServiceManager(ServiceManagerConfigurator $serviceManagerConfigurator): void
     {
-
     }
 }
