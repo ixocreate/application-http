@@ -17,6 +17,7 @@
         "zendframework/zend-expressive-platesrenderer": "^2.0.0-dev",
         "zendframework/zend-expressive-helpers": "^5.0.0-dev",
         "kiwi-suite/application": "^0",
+        "kiwi-suite/entity": "dev-develop",
         "kiwi-suite/config": "^0"
     },
     "require-dev": {
