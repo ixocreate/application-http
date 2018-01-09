@@ -39,7 +39,7 @@ final class RouteConfig implements \Serializable
      */
     public function serialize()
     {
-        return serialize($this->routes);
+        return \serialize($this->routes);
     }
 
     /**
@@ -47,6 +47,6 @@ final class RouteConfig implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $this->routes = unserialize($serialized);
+        $this->routes = \unserialize($serialized);
     }
 }

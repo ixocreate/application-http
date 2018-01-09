@@ -68,7 +68,7 @@ class PipeConfig implements \Serializable
      */
     public function serialize()
     {
-        return serialize([
+        return \serialize([
             'globalPipe' => $this->globalPipe,
             'routingPipe' => $this->routingPipe,
             'dispatchPipe' => $this->dispatchPipe,
@@ -80,7 +80,7 @@ class PipeConfig implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $array = unserialize($serialized);
+        $array = \unserialize($serialized);
 
         $this->globalPipe = $array['globalPipe'];
         $this->routingPipe = $array['routingPipe'];

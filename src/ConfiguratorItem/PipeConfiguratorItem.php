@@ -11,14 +11,8 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 
-use KiwiSuite\Application\ApplicationConfig;
-use KiwiSuite\Application\Bootstrap\BootstrapInterface;
-use KiwiSuite\Application\Bootstrap\BootstrapRegistry;
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
-use KiwiSuite\Application\IncludeHelper;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
-use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
 use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
 use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 

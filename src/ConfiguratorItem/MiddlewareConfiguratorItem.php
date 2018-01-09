@@ -11,11 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 
-use KiwiSuite\Application\ApplicationConfig;
-use KiwiSuite\Application\Bootstrap\BootstrapInterface;
-use KiwiSuite\Application\Bootstrap\BootstrapRegistry;
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
-use KiwiSuite\Application\IncludeHelper;
 use KiwiSuite\ApplicationHttp\Middleware\Factory\ImplicitHeadMiddlewareFactory;
 use KiwiSuite\ApplicationHttp\Middleware\Factory\ImplicitOptionsMiddlewareFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareServiceManagerConfig;
@@ -35,7 +31,6 @@ final class MiddlewareConfiguratorItem implements ConfiguratorItemInterface
         $serviceManagerConfigurator->addFactory(ImplicitOptionsMiddleware::class, ImplicitOptionsMiddlewareFactory::class);
 
         return $serviceManagerConfigurator;
-
     }
 
     /**
