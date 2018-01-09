@@ -11,7 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Route;
 
-final class RouteConfig
+final class RouteConfig implements \Serializable
 {
     /**
      * @var array
@@ -32,5 +32,21 @@ final class RouteConfig
     public function getRoutes(): array
     {
         return $this->routes;
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize($this->routes);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $this->routes = unserialize($serialized);
     }
 }

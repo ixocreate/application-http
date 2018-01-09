@@ -9,33 +9,30 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Bootstrap;
+namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 
 use KiwiSuite\Application\ApplicationConfig;
 use KiwiSuite\Application\Bootstrap\BootstrapInterface;
 use KiwiSuite\Application\Bootstrap\BootstrapRegistry;
+use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
 use KiwiSuite\Application\IncludeHelper;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
+use KiwiSuite\ApplicationHttp\Route\RouteConfig;
+use KiwiSuite\ApplicationHttp\Route\RouteConfigurator;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
-use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
-use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 
-final class PipeBootstrap implements BootstrapInterface
+final class RouteConfiguratorItem implements ConfiguratorItemInterface
 {
     /**
      * @var string
      */
-    private $bootstrapFilename = 'pipe.php';
-
+    private $bootstrapFilename = 'route.php';
     /**
      * @param ApplicationConfig $applicationConfig
      * @param BootstrapRegistry $bootstrapRegistry
      */
     public function bootstrap(ApplicationConfig $applicationConfig, BootstrapRegistry $bootstrapRegistry): void
     {
-        $pipeConfigurator = new PipeConfigurator();
-        $this->addDefaults($pipeConfigurator);
+        $routeConfigurator = new RouteConfigurator();
         $bootstrapDirectories = [
             $applicationConfig->getBootstrapDirectory(),
         ];
@@ -46,26 +43,47 @@ final class PipeBootstrap implements BootstrapInterface
             if (\file_exists($directory . $this->bootstrapFilename)) {
                 IncludeHelper::include(
                     $directory . $this->bootstrapFilename,
-                    ['pipeConfigurator' => $pipeConfigurator]
+                    ['routeConfigurator' => $routeConfigurator]
                 );
             }
         }
-        $bootstrapRegistry->addService(PipeConfig::class, $pipeConfigurator->getPipeConfig());
+        $bootstrapRegistry->addService(RouteConfig::class, $routeConfigurator->getRouteConfig());
     }
 
-    /**
-     * @param PipeConfigurator $pipeConfigurator
-     */
-    private function addDefaults(PipeConfigurator $pipeConfigurator) : void
-    {
-        $pipeConfigurator->addRoutingPipe(ImplicitHeadMiddleware::class);
-        $pipeConfigurator->addRoutingPipe(ImplicitOptionsMiddleware::class);
-    }
-
-    /**
-     * @param ServiceManagerConfigurator $serviceManagerConfigurator
-     */
     public function configureServiceManager(ServiceManagerConfigurator $serviceManagerConfigurator): void
     {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfigurator()
+    {
+        return new RouteConfigurator();
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfiguratorName(): string
+    {
+        return 'routeConfigurator';
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfiguratorFileName(): string
+    {
+        return 'route.php';
+    }
+
+    /**
+     * @param RouteConfigurator $configurator
+     * @return \Serializable
+     */
+    public function getService($configurator): \Serializable
+    {
+        return $configurator->getRouteConfig();
     }
 }

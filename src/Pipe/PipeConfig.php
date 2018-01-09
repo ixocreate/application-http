@@ -11,7 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
-class PipeConfig
+class PipeConfig implements \Serializable
 {
     /**
      * @var array
@@ -61,5 +61,29 @@ class PipeConfig
     public function getDispatchPipe(): array
     {
         return $this->dispatchPipe;
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize([
+            'globalPipe' => $this->globalPipe,
+            'routingPipe' => $this->routingPipe,
+            'dispatchPipe' => $this->dispatchPipe,
+        ]);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $array = unserialize($serialized);
+
+        $this->globalPipe = $array['globalPipe'];
+        $this->routingPipe = $array['routingPipe'];
+        $this->dispatchPipe = $array['dispatchPipe'];
     }
 }

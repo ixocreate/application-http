@@ -14,15 +14,15 @@ namespace KiwiSuite\ApplicationHttp;
 use KiwiSuite\Application\ApplicationConfigurator;
 use KiwiSuite\Application\ApplicationInterface;
 use KiwiSuite\Application\Bootstrap;
-use KiwiSuite\ApplicationHttp\Bootstrap\MiddlewareBootstrap;
-use KiwiSuite\ApplicationHttp\Bootstrap\PipeBootstrap;
-use KiwiSuite\ApplicationHttp\Bootstrap\RouteBootstrap;
+use KiwiSuite\Application\ConfiguratorItem\ConfiguratorRegistry;
+use KiwiSuite\ApplicationHttp\ConfiguratorItem\MiddlewareConfiguratorItem;
+use KiwiSuite\ApplicationHttp\ConfiguratorItem\PipeConfiguratorItem;
+use KiwiSuite\ApplicationHttp\ConfiguratorItem\RouteConfiguratorItem;
 use KiwiSuite\ApplicationHttp\Factory\ApplicationFactory;
 use KiwiSuite\ApplicationHttp\Middleware\Factory\MiddlewareSubManagerFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Route\RouteConfig;
-use KiwiSuite\Config\Bootstrap\ConfigBootstrap;
 use KiwiSuite\ServiceManager\ServiceManager;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
 use Zend\Expressive\Application;
@@ -60,20 +60,22 @@ final class HttpApplication implements ApplicationInterface
      * @param ApplicationConfigurator $applicationConfigurator
      * @return mixed
      */
-    public function configureApplicationConfig(ApplicationConfigurator $applicationConfigurator)
+    public function configureApplicationConfig(ApplicationConfigurator $applicationConfigurator) : void
     {
-        $applicationConfigurator->addBootstrapItem(ConfigBootstrap::class, 100);
-        $applicationConfigurator->addBootstrapItem(MiddlewareBootstrap::class, 200);
-        $applicationConfigurator->addBootstrapItem(PipeBootstrap::class, 300);
-        $applicationConfigurator->addBootstrapItem(RouteBootstrap::class, 400);
+        $applicationConfigurator->addConfiguratorItem(MiddlewareConfiguratorItem::class);
+        $applicationConfigurator->addConfiguratorItem(PipeConfiguratorItem::class);
+        $applicationConfigurator->addConfiguratorItem(RouteConfiguratorItem::class);
     }
 
     /**
-     * @param ServiceManagerConfigurator $serviceManagerConfigurator
+     * @param ConfiguratorRegistry $configuratorRegistry
      */
-    public function configureServiceManager(ServiceManagerConfigurator $serviceManagerConfigurator): void
+    public function configure(ConfiguratorRegistry $configuratorRegistry): void
     {
-        $serviceManagerConfigurator->addSubManager(MiddlewareSubManager::class, MiddlewareSubManagerFactory::class);
+        /** @var ServiceManagerConfigurator $serviceManagerConfigurator */
+        $serviceManagerConfigurator = $configuratorRegistry->getConfigurator(ServiceManagerConfigurator::class);
+
         $serviceManagerConfigurator->addFactory(Application::class, ApplicationFactory::class);
+        $serviceManagerConfigurator->addSubManager(MiddlewareSubManager::class, MiddlewareSubManagerFactory::class);
     }
 }
