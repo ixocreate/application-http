@@ -17,7 +17,7 @@
         "zendframework/zend-expressive-platesrenderer": "^2.0.0-dev",
         "zendframework/zend-expressive-helpers": "^5.0.0-dev",
         "kiwi-suite/application": "dev-develop",
-        "kiwi-suite/config": "dev-develop"
+        "kiwi-suite/entity": "dev-develop"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0.6",
