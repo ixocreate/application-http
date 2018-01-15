@@ -23,6 +23,7 @@ use KiwiSuite\ApplicationHttp\Middleware\Factory\MiddlewareSubManagerFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Route\RouteConfig;
+use KiwiSuite\Database\Bootstrap\DatabaseBootstrap;
 use KiwiSuite\ServiceManager\ServiceManager;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
 use Zend\Expressive\Application;
@@ -65,6 +66,8 @@ final class HttpApplication implements ApplicationInterface
         $applicationConfigurator->addConfiguratorItem(MiddlewareConfiguratorItem::class);
         $applicationConfigurator->addConfiguratorItem(PipeConfiguratorItem::class);
         $applicationConfigurator->addConfiguratorItem(RouteConfiguratorItem::class);
+
+        $applicationConfigurator->addBootstrapItem(DatabaseBootstrap::class);
     }
 
     /**
@@ -73,7 +76,7 @@ final class HttpApplication implements ApplicationInterface
     public function configure(ConfiguratorRegistry $configuratorRegistry): void
     {
         /** @var ServiceManagerConfigurator $serviceManagerConfigurator */
-        $serviceManagerConfigurator = $configuratorRegistry->getConfigurator(ServiceManagerConfigurator::class);
+        $serviceManagerConfigurator = $configuratorRegistry->getConfigurator('serviceManagerConfigurator');
 
         $serviceManagerConfigurator->addFactory(Application::class, ApplicationFactory::class);
         $serviceManagerConfigurator->addSubManager(MiddlewareSubManager::class, MiddlewareSubManagerFactory::class);
