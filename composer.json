@@ -18,6 +18,7 @@
         "zendframework/zend-expressive-helpers": "^5.0.0-dev",
         "kiwi-suite/application": "dev-develop",
         "kiwi-suite/database": "dev-develop",
+        "kiwi-suite/project-uri": "dev-develop",
         "kiwi-suite/entity": "dev-develop"
     },
     "require-dev": {

@@ -13,6 +13,7 @@ namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
+use KiwiSuite\ProjectUri\Middleware\ProjectUriCheckMiddleware;
 use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
 use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 
@@ -24,8 +25,9 @@ final class PipeConfiguratorItem implements ConfiguratorItemInterface
     public function getConfigurator()
     {
         $pipeConfigurator = new PipeConfigurator();
-        $pipeConfigurator->addRoutingPipe(ImplicitHeadMiddleware::class);
-        $pipeConfigurator->addRoutingPipe(ImplicitOptionsMiddleware::class);
+        $pipeConfigurator->addGlobalMiddleware(ProjectUriCheckMiddleware::class, 10000);
+        $pipeConfigurator->addRoutingMiddleware(ImplicitHeadMiddleware::class);
+        $pipeConfigurator->addRoutingMiddleware(ImplicitOptionsMiddleware::class);
 
         return $pipeConfigurator;
     }
