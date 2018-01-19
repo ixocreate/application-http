@@ -11,7 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Route;
 
-final class RouteConfig implements \Serializable
+class RouteConfig implements \Serializable
 {
     /**
      * @var array

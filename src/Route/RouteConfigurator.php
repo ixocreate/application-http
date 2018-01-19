@@ -20,6 +20,20 @@ final class RouteConfigurator
      * @var array
      */
     private $routes = [];
+    /**
+     * @var string
+     */
+    private $routeClass;
+
+    /**
+     * RouteConfigurator constructor.
+     * @param string $routeClass
+     */
+    public function __construct(string $routeClass = RouteConfig::class)
+    {
+
+        $this->routeClass = $routeClass;
+    }
 
     /**
      * @param string $path
@@ -132,6 +146,6 @@ final class RouteConfigurator
      */
     public function getRouteConfig(): RouteConfig
     {
-        return new RouteConfig($this->routes);
+        return new $this->routeClass($this->routes);
     }
 }

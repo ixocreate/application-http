@@ -12,12 +12,14 @@ declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Factory;
 
 use Interop\Http\Server\MiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\ApplicationHttp\Middleware\PathMiddlewareDecorator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Route\RouteConfig;
 use KiwiSuite\ServiceManager\FactoryInterface;
 use KiwiSuite\ServiceManager\ServiceManagerInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Expressive\Application;
 use Zend\Expressive\Emitter\EmitterStack;
@@ -40,7 +42,7 @@ final class ApplicationFactory implements FactoryInterface
         $emitter = new EmitterStack();
         $emitter->push(new SapiEmitter());
 
-        $application = new Application(
+        $application = new $requestedName(
             new FastRouteRouter(),
             $container->get(MiddlewareSubManager::class),
             null,
@@ -48,7 +50,7 @@ final class ApplicationFactory implements FactoryInterface
         );
 
         if ($options !== null && \array_key_exists(PipeConfig::class, $options) && $options[PipeConfig::class] instanceof PipeConfig) {
-            $this->addPipes($application, $options[PipeConfig::class]);
+            $this->addPipes($application, $options[PipeConfig::class], $container);
         }
 
         if ($options !== null && \array_key_exists(RouteConfig::class, $options) && $options[RouteConfig::class] instanceof RouteConfig) {
@@ -58,14 +60,18 @@ final class ApplicationFactory implements FactoryInterface
         return $application;
     }
 
-    private function addPipes(Application $application, PipeConfig $pipeConfig) : void
+    private function addPipes(Application $application, PipeConfig $pipeConfig, ServiceManagerInterface $container) : void
     {
         foreach ($pipeConfig->getGlobalPipe() as $globalItem) {
             $middleware = $this->createMiddlewarePipe($globalItem['middlewares']);
             $originalMiddleware = $middleware;
             if ($globalItem['path'] !== null) {
-                $middleware = function () use ($originalMiddleware) {
-                    return new PathMiddlewareDecorator($globalItem['path'], $originalMiddleware);
+                $middleware = function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($originalMiddleware, $globalItem, $container) {
+                    if (is_string($originalMiddleware)) {
+                        $originalMiddleware = $container->get(MiddlewareSubManager::class)->get($originalMiddleware);
+                    }
+                    $pathMiddleware = new PathMiddlewareDecorator($globalItem['path'], $originalMiddleware);
+                    return $pathMiddleware->process($request, $handler);
                 };
             }
             $application->pipe($middleware);

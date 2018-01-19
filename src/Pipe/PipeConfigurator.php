@@ -31,15 +31,21 @@ final class PipeConfigurator
      * @var SplPriorityQueue
      */
     private $dispatchQueue;
+    /**
+     * @var string
+     */
+    private $pipeClass;
 
     /**
      * PipeConfigurator constructor.
+     * @param string $pipeClass
      */
-    public function __construct()
+    public function __construct(string $pipeClass = PipeConfig::class)
     {
         $this->globalQueue = new SplPriorityQueue();
         $this->routingQueue = new SplPriorityQueue();
         $this->dispatchQueue = new SplPriorityQueue();
+        $this->pipeClass = $pipeClass;
     }
 
     public function addPathMiddleware(string $path, string $middleware, int $priority = 100) : void
@@ -172,7 +178,8 @@ final class PipeConfigurator
                 $dispatchPipe[] = $this->dispatchQueue->extract();
             }
         }
-        return new PipeConfig(
+
+        return new $this->pipeClass(
             $globalPipe,
             $routingPipe,
             $dispatchPipe
