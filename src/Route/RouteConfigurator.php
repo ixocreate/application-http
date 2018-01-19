@@ -11,6 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Route;
 
+use Interop\Http\Server\MiddlewareInterface;
 use KiwiSuite\Application\Exception\InvalidArgumentException;
 
 final class RouteConfigurator
@@ -22,52 +23,57 @@ final class RouteConfigurator
 
     /**
      * @param string $path
-     * @param array $middleware
+     * @param string $action
      * @param string $name
+     * @param array $middlewares
      */
-    public function addGet(string $path, array $middleware, string $name): void
+    public function addGet(string $path, string $action, string $name, array $middlewares = []): void
     {
-        $this->addRoute($path, $middleware, $name, ['GET']);
+        $this->addRoute($path, $action, $name, ['GET'], $middlewares);
     }
 
     /**
      * @param string $path
-     * @param array $middleware
+     * @param string $action
      * @param string $name
+     * @param array $middlewares
      */
-    public function addPost(string $path, array $middleware, string $name): void
+    public function addPost(string $path, string $action, string $name, array $middlewares = []): void
     {
-        $this->addRoute($path, $middleware, $name, ['POST']);
+        $this->addRoute($path, $action, $name, ['POST'], $middlewares);
     }
 
     /**
      * @param string $path
-     * @param array $middleware
+     * @param string $action
      * @param string $name
+     * @param array $middlewares
      */
-    public function addDelete(string $path, array $middleware, string $name): void
+    public function addDelete(string $path, string $action, string $name, array $middlewares = []): void
     {
-        $this->addRoute($path, $middleware, $name, ['DELETE']);
+        $this->addRoute($path, $action, $name, ['DELETE'], $middlewares);
     }
 
     /**
      * @param string $path
-     * @param array $middleware
+     * @param string $action
      * @param string $name
+     * @param array $middlewares
      */
-    public function addPut(string $path, array $middleware, string $name): void
+    public function addPut(string $path, string $action, string $name, array $middlewares = []): void
     {
-        $this->addRoute($path, $middleware, $name, ['PUT']);
+        $this->addRoute($path, $action, $name, ['PUT'], $middlewares);
     }
 
     /**
      * @param string $path
-     * @param array $middleware
+     * @param string $action
      * @param string $name
+     * @param array $middlewares
      */
-    public function addPatch(string $path, array $middleware, string $name): void
+    public function addPatch(string $path, string $action, string $name, array $middlewares = []): void
     {
-        $this->addRoute($path, $middleware, $name, ['PATCH']);
+        $this->addRoute($path, $action, $name, ['PATCH'], $middlewares);
     }
 
     /**
@@ -76,7 +82,7 @@ final class RouteConfigurator
      * @param string $name
      * @param array|null $methods
      */
-    public function addRoute(string $path, array $middleware, string $name, array $methods = null): void
+    public function addRoute(string $path, string $action, string $name, array $methods = null, array $middlewares = []): void
     {
         if ($methods !== null) {
             $methods = \array_values($methods);
@@ -86,13 +92,41 @@ final class RouteConfigurator
                 }
             }
         }
+        $middlewares = \array_values($middlewares);
+        $middlewares[] = $action;
+        $this->checkMiddlewareArray($middlewares);
+
         $this->routes[] = [
             'path' => $path,
-            'middleware' => $middleware,
+            'middlewares' => $middlewares,
             'name' => $name,
             'methods' => $methods,
         ];
     }
+
+    /**
+     * @param string $middleware
+     * @return bool
+     */
+    private function checkMiddlewareString(string $middleware) : void
+    {
+        $implements = class_implements($middleware);
+        if (!\in_array(MiddlewareInterface::class, $implements)) {
+            //TODO Exception
+            throw new \InvalidArgumentException(sprintf("'%s' must implement '%s'", $middleware, MiddlewareInterface::class));
+        }
+    }
+
+    /**
+     * @param array $middlewares
+     */
+    private function checkMiddlewareArray(array $middlewares) : void
+    {
+        foreach ($middlewares as $middleware) {
+            $this->checkMiddlewareString($middleware);
+        }
+    }
+
     /**
      * @return RouteConfig
      */

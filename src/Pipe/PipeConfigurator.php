@@ -11,6 +11,8 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
+use Interop\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\UriInterface;
 use \SplPriorityQueue;
 
 final class PipeConfigurator
@@ -40,34 +42,111 @@ final class PipeConfigurator
         $this->dispatchQueue = new SplPriorityQueue();
     }
 
-    /**
-     * @param string $middleware
-     * @param int $priority
-     */
-    public function addGlobalMidPipe(string $middleware, int $priority = 100): void
+    public function addPathMiddleware(string $path, string $middleware, int $priority = 100) : void
     {
-        //TODO Check Middleware
-        $this->globalQueue->insert($middleware, $priority);
+        $this->checkMiddlewareString($middleware);
+        $this->globalQueue->insert([
+            'middlewares' => [$middleware],
+            'path' => $path,
+            'uri' => null,
+        ], $priority);
+    }
+
+    public function addPathMiddlewarePipe(string $path, array $middlewares, int $priority = 100) : void
+    {
+        $this->checkMiddlewareArray($middlewares);
+        $this->globalQueue->insert([
+            'middlewares' => \array_values($middlewares),
+            'path' => $path,
+            'uri' => null,
+        ], $priority);
+    }
+
+    /*public function addUriMiddleware(UriInterface $uri, string $middleware, int $priority = 100) : void
+    {
+        $this->checkMiddlewareString($middleware);
+        $this->globalQueue->insert([
+            'middlewares' => [$middleware],
+            'path' => null,
+            'uri' => $uri,
+        ], $priority);
+    }
+
+    public function addUriMiddlewarePipe(UriInterface $uri, array $middlewares, int $priority = 100) : void
+    {
+        $this->checkMiddlewareArray($middlewares);
+        $this->globalQueue->insert([
+            'middlewares' => \array_values($middlewares),
+            'path' => null,
+            'uri' => $uri,
+        ], $priority);
+    }*/
+
+    public function addGlobalMiddleware(string $middleware, int $priority = 100) : void
+    {
+        $this->checkMiddlewareString($middleware);
+        $this->globalQueue->insert([
+            'middlewares' => [$middleware],
+            'path' => null,
+            'uri' => null,
+        ], $priority);
+    }
+
+    public function addGlobalMiddlewarePipe(array $middlewares, int $priority = 100) : void
+    {
+        $this->checkMiddlewareArray($middlewares);
+        $this->globalQueue->insert([
+            'middlewares' => \array_values($middlewares),
+            'path' => null,
+            'uri' => null,
+        ], $priority);
+    }
+
+    public function addRoutingMiddleware(string $middleware, int $priority = 100) : void
+    {
+        $this->checkMiddlewareString($middleware);
+        $this->routingQueue->insert([$middleware], $priority);
+    }
+
+    public function addRoutingMiddlewarePipe(array $middlewares, int $priority = 100) : void
+    {
+        $this->checkMiddlewareArray($middlewares);
+        $this->routingQueue->insert(\array_values($middlewares), $priority);
+    }
+
+    public function addDispatchMiddleware(string $middleware, int $priority = 100) : void
+    {
+        $this->checkMiddlewareString($middleware);
+        $this->dispatchQueue->insert([$middleware], $priority);
+    }
+
+    public function addDispatchMiddlewarePipe(array $middlewares, int $priority = 100) : void
+    {
+        $this->checkMiddlewareArray($middlewares);
+        $this->dispatchQueue->insert(\array_values($middlewares), $priority);
     }
 
     /**
      * @param string $middleware
-     * @param int $priority
+     * @return bool
      */
-    public function addRoutingPipe(string $middleware, int $priority = 100): void
+    private function checkMiddlewareString(string $middleware) : void
     {
-        //TODO Check Middleware
-        $this->routingQueue->insert($middleware, $priority);
+        $implements = class_implements($middleware);
+        if (!\in_array(MiddlewareInterface::class, $implements)) {
+            //TODO Exception
+            throw new \InvalidArgumentException(sprintf("'%s' must implement '%s'", $middleware, MiddlewareInterface::class));
+        }
     }
 
     /**
-     * @param string $middleware
-     * @param int $priority
+     * @param array $middlewares
      */
-    public function addDispatchPipe(string $middleware, int $priority = 100): void
+    private function checkMiddlewareArray(array $middlewares) : void
     {
-        //TODO Check Middleware
-        $this->dispatchQueue->insert($middleware, $priority);
+        foreach ($middlewares as $middleware) {
+            $this->checkMiddlewareString($middleware);
+        }
     }
 
     public function getPipeConfig(): PipeConfig

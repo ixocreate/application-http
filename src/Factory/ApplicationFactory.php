@@ -11,7 +11,9 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Factory;
 
+use Interop\Http\Server\MiddlewareInterface;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
+use KiwiSuite\ApplicationHttp\Middleware\PathMiddlewareDecorator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Route\RouteConfig;
 use KiwiSuite\ServiceManager\FactoryInterface;
@@ -20,6 +22,7 @@ use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Expressive\Application;
 use Zend\Expressive\Emitter\EmitterStack;
 use Zend\Expressive\Router\FastRouteRouter;
+use Zend\Stratigility\MiddlewarePipe;
 
 final class ApplicationFactory implements FactoryInterface
 {
@@ -57,7 +60,14 @@ final class ApplicationFactory implements FactoryInterface
 
     private function addPipes(Application $application, PipeConfig $pipeConfig) : void
     {
-        foreach ($pipeConfig->getGlobalPipe() as $middleware) {
+        foreach ($pipeConfig->getGlobalPipe() as $globalItem) {
+            $middleware = $this->createMiddlewarePipe($globalItem['middlewares']);
+            $originalMiddleware = $middleware;
+            if ($globalItem['path'] !== null) {
+                $middleware = function () use ($originalMiddleware) {
+                    return new PathMiddlewareDecorator($globalItem['path'], $originalMiddleware);
+                };
+            }
             $application->pipe($middleware);
         }
 
@@ -77,10 +87,24 @@ final class ApplicationFactory implements FactoryInterface
         foreach ($routeConfig->getRoutes() as $route) {
             $application->route(
                 $route['path'],
-                $route['middleware'],
+                $this->createMiddlewarePipe($route['middlewares']),
                 $route['methods'],
                 $route['name']
             );
         }
+    }
+
+    private function createMiddlewarePipe(array $middlewares)
+    {
+        if (count($middlewares) === 1) {
+            return array_pop($middlewares);
+        }
+
+        $middlewarePipe = new MiddlewarePipe();
+        foreach ($middlewares as $middlware) {
+            $middlewarePipe->pipe($middlware);
+        }
+
+        return $middlewarePipe;
     }
 }
