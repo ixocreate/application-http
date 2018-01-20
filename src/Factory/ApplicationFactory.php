@@ -20,9 +20,11 @@ use KiwiSuite\ApplicationHttp\Route\RouteConfig;
 use KiwiSuite\ServiceManager\FactoryInterface;
 use KiwiSuite\ServiceManager\ServiceManagerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Expressive\Application;
 use Zend\Expressive\Emitter\EmitterStack;
+use Zend\Expressive\Middleware\LazyLoadingMiddleware;
 use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Stratigility\MiddlewarePipe;
 
@@ -54,25 +56,25 @@ final class ApplicationFactory implements FactoryInterface
         }
 
         if ($options !== null && \array_key_exists(RouteConfig::class, $options) && $options[RouteConfig::class] instanceof RouteConfig) {
-            $this->addRoutes($application, $options[RouteConfig::class]);
+            $this->addRoutes($application, $options[RouteConfig::class], $container);
         }
 
         return $application;
     }
 
+    /**
+     * @param Application $application
+     * @param PipeConfig $pipeConfig
+     * @param ServiceManagerInterface $container
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     private function addPipes(Application $application, PipeConfig $pipeConfig, ServiceManagerInterface $container) : void
     {
         foreach ($pipeConfig->getGlobalPipe() as $globalItem) {
-            $middleware = $this->createMiddlewarePipe($globalItem['middlewares']);
-            $originalMiddleware = $middleware;
+            $middleware = $this->createMiddlewarePipe($globalItem['middlewares'], $container);
             if ($globalItem['path'] !== null) {
-                $middleware = function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($originalMiddleware, $globalItem, $container) {
-                    if (is_string($originalMiddleware)) {
-                        $originalMiddleware = $container->get(MiddlewareSubManager::class)->get($originalMiddleware);
-                    }
-                    $pathMiddleware = new PathMiddlewareDecorator($globalItem['path'], $originalMiddleware);
-                    return $pathMiddleware->process($request, $handler);
-                };
+                $middleware = new PathMiddlewareDecorator($globalItem['path'], $middleware);
             }
             $application->pipe($middleware);
         }
@@ -88,27 +90,51 @@ final class ApplicationFactory implements FactoryInterface
         }
     }
 
-    private function addRoutes(Application $application, RouteConfig $routeConfig): void
+    /**
+     * @param Application $application
+     * @param RouteConfig $routeConfig
+     * @param ServiceManagerInterface $container
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    private function addRoutes(Application $application, RouteConfig $routeConfig, ServiceManagerInterface $container): void
     {
         foreach ($routeConfig->getRoutes() as $route) {
             $application->route(
                 $route['path'],
-                $this->createMiddlewarePipe($route['middlewares']),
+                $this->createMiddlewarePipe($route['middlewares'], $container),
                 $route['methods'],
                 $route['name']
             );
         }
     }
 
-    private function createMiddlewarePipe(array $middlewares)
+    /**
+     * @param array $middlewares
+     * @param ServiceManagerInterface $container
+     * @return LazyLoadingMiddleware|MiddlewarePipe
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    private function createMiddlewarePipe(array $middlewares, ServiceManagerInterface $container)
     {
         if (count($middlewares) === 1) {
-            return array_pop($middlewares);
+            return new LazyLoadingMiddleware(
+                $container->get(MiddlewareSubManager::class),
+                new Response(),
+                array_pop($middlewares)
+            );
         }
 
         $middlewarePipe = new MiddlewarePipe();
         foreach ($middlewares as $middlware) {
-            $middlewarePipe->pipe($middlware);
+            $lazyMiddleware = new LazyLoadingMiddleware(
+                $container->get(MiddlewareSubManager::class),
+                new Response(),
+                $middlware
+            );
+
+            $middlewarePipe->pipe($lazyMiddleware);
         }
 
         return $middlewarePipe;
