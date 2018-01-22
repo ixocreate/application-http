@@ -26,6 +26,7 @@ use Zend\Expressive\Application;
 use Zend\Expressive\Emitter\EmitterStack;
 use Zend\Expressive\Middleware\LazyLoadingMiddleware;
 use Zend\Expressive\Router\FastRouteRouter;
+use Zend\Expressive\Router\RouterInterface;
 use Zend\Stratigility\MiddlewarePipe;
 
 final class ApplicationFactory implements FactoryInterface
@@ -44,8 +45,14 @@ final class ApplicationFactory implements FactoryInterface
         $emitter = new EmitterStack();
         $emitter->push(new SapiEmitter());
 
+        if ($options !== null && \array_key_exists(RouterInterface::class, $options) && $options[RouterInterface::class] instanceof RouterInterface) {
+            $router =  $options[RouterInterface::class];
+        } else {
+            $router = new FastRouteRouter();
+        }
+
         $application = new $requestedName(
-            new FastRouteRouter(),
+            $router,
             $container->get(MiddlewareSubManager::class),
             null,
             $emitter
