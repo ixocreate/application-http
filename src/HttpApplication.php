@@ -23,7 +23,9 @@ use KiwiSuite\ApplicationHttp\Middleware\Factory\MiddlewareSubManagerFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Route\RouteConfig;
+use KiwiSuite\CommonTypes\Bootstrap\CommonTypesBootstrap;
 use KiwiSuite\Database\Bootstrap\DatabaseBootstrap;
+use KiwiSuite\Entity\Bootstrap\EntityBootstrap;
 use KiwiSuite\ProjectUri\Bootstrap\ProjectUriBootstrap;
 use KiwiSuite\ServiceManager\ServiceManager;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
@@ -68,8 +70,10 @@ final class HttpApplication implements ApplicationInterface
         $applicationConfigurator->addConfiguratorItem(PipeConfiguratorItem::class);
         $applicationConfigurator->addConfiguratorItem(RouteConfiguratorItem::class);
 
-        $applicationConfigurator->addBootstrapItem(DatabaseBootstrap::class);
+        $applicationConfigurator->addBootstrapItem(EntityBootstrap::class);
+        $applicationConfigurator->addBootstrapItem(CommonTypesBootstrap::class);
         $applicationConfigurator->addBootstrapItem(ProjectUriBootstrap::class);
+        $applicationConfigurator->addBootstrapItem(DatabaseBootstrap::class);
     }
 
     /**
