@@ -60,7 +60,7 @@ final class ApplicationHttpBootstrap implements BootstrapInterface
      */
     public function getDefaultConfig(): ?array
     {
-        // TODO: Implement getDefaultConfig() method.
+        return null;
     }
 
     /**
@@ -68,6 +68,5 @@ final class ApplicationHttpBootstrap implements BootstrapInterface
      */
     public function boot(ServiceManager $serviceManager): void
     {
-        // TODO: Implement boot() method.
     }
 }
