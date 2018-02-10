@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
+use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\ProjectUri\Middleware\ProjectUriCheckMiddleware;
 use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
@@ -24,12 +25,7 @@ final class PipeConfiguratorItem implements ConfiguratorItemInterface
      */
     public function getConfigurator()
     {
-        $pipeConfigurator = new PipeConfigurator();
-        $pipeConfigurator->addGlobalMiddleware(ProjectUriCheckMiddleware::class, 10000);
-        $pipeConfigurator->addRoutingMiddleware(ImplicitHeadMiddleware::class);
-        $pipeConfigurator->addRoutingMiddleware(ImplicitOptionsMiddleware::class);
-
-        return $pipeConfigurator;
+        return new PipeConfigurator();;
     }
 
     /**
@@ -49,11 +45,11 @@ final class PipeConfiguratorItem implements ConfiguratorItemInterface
     }
 
     /**
-     * @param PipeConfigurator$configurator
+     * @param PipeConfigurator $configurator
      * @return \Serializable
      */
     public function getService($configurator): \Serializable
     {
-        return $configurator->getPipeConfig();
+        return new PipeConfig($configurator);
     }
 }

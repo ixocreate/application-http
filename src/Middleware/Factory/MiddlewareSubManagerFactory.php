@@ -11,12 +11,12 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Middleware\Factory;
 
-use Interop\Http\Server\MiddlewareInterface;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareServiceManagerConfig;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\ServiceManager\ServiceManagerInterface;
 use KiwiSuite\ServiceManager\SubManager\SubManagerFactoryInterface;
 use KiwiSuite\ServiceManager\SubManager\SubManagerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 class MiddlewareSubManagerFactory implements SubManagerFactoryInterface
 {

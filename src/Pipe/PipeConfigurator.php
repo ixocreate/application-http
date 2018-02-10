@@ -1,188 +1,210 @@
 <?php
-/**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
- * @license MIT License
- */
-
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
-use Interop\Http\Server\MiddlewareInterface;
-use Psr\Http\Message\UriInterface;
-use \SplPriorityQueue;
+use Zend\Stdlib\SplPriorityQueue;
 
 final class PipeConfigurator
 {
+    public const PRIORITY_PRE_ROUTING = 1000000;
+    public const PRIORITY_POST_ROUTING = 499999;
+    public const PRIORITY_POST_DISPATCHING = 999;
+
+    private const PRIORITY_ROUTING = 500000;
+    private const PRIORITY_DISPATCHING = 1000;
+
     /**
-     * @var SplPriorityQueue
+     * @var RouteConfigurator[]
      */
-    private $globalQueue;
+    private $routes = [];
 
     /**
      * @var SplPriorityQueue
      */
-    private $routingQueue;
+    private $middlewareQueue;
 
-    /**
-     * @var SplPriorityQueue
-     */
-    private $dispatchQueue;
     /**
      * @var string
      */
-    private $pipeClass;
+    private $prefix;
 
-    /**
-     * PipeConfigurator constructor.
-     * @param string $pipeClass
-     */
-    public function __construct(string $pipeClass = PipeConfig::class)
+    public function __construct(string $prefix = "")
     {
-        $this->globalQueue = new SplPriorityQueue();
-        $this->routingQueue = new SplPriorityQueue();
-        $this->dispatchQueue = new SplPriorityQueue();
-        $this->pipeClass = $pipeClass;
+        $this->middlewareQueue = new SplPriorityQueue();
+
+        $this->middlewareQueue->insert([
+            'type' => PipeConfig::TYPE_ROUTING
+        ], self::PRIORITY_ROUTING);
+
+        $this->middlewareQueue->insert([
+            'type' => PipeConfig::TYPE_DISPATCHING
+        ], self::PRIORITY_DISPATCHING);
+
+        $this->prefix = $prefix;
     }
 
-    public function addPathMiddleware(string $path, string $middleware, int $priority = 100) : void
+    private function validatePriority(int $priority): void
     {
-        $this->checkMiddlewareString($middleware);
-        $this->globalQueue->insert([
-            'middlewares' => [$middleware],
-            'path' => $path,
-            'uri' => null,
-        ], $priority);
-    }
-
-    public function addPathMiddlewarePipe(string $path, array $middlewares, int $priority = 100) : void
-    {
-        $this->checkMiddlewareArray($middlewares);
-        $this->globalQueue->insert([
-            'middlewares' => \array_values($middlewares),
-            'path' => $path,
-            'uri' => null,
-        ], $priority);
-    }
-
-    /*public function addUriMiddleware(UriInterface $uri, string $middleware, int $priority = 100) : void
-    {
-        $this->checkMiddlewareString($middleware);
-        $this->globalQueue->insert([
-            'middlewares' => [$middleware],
-            'path' => null,
-            'uri' => $uri,
-        ], $priority);
-    }
-
-    public function addUriMiddlewarePipe(UriInterface $uri, array $middlewares, int $priority = 100) : void
-    {
-        $this->checkMiddlewareArray($middlewares);
-        $this->globalQueue->insert([
-            'middlewares' => \array_values($middlewares),
-            'path' => null,
-            'uri' => $uri,
-        ], $priority);
-    }*/
-
-    public function addGlobalMiddleware(string $middleware, int $priority = 100) : void
-    {
-        $this->checkMiddlewareString($middleware);
-        $this->globalQueue->insert([
-            'middlewares' => [$middleware],
-            'path' => null,
-            'uri' => null,
-        ], $priority);
-    }
-
-    public function addGlobalMiddlewarePipe(array $middlewares, int $priority = 100) : void
-    {
-        $this->checkMiddlewareArray($middlewares);
-        $this->globalQueue->insert([
-            'middlewares' => \array_values($middlewares),
-            'path' => null,
-            'uri' => null,
-        ], $priority);
-    }
-
-    public function addRoutingMiddleware(string $middleware, int $priority = 100) : void
-    {
-        $this->checkMiddlewareString($middleware);
-        $this->routingQueue->insert([$middleware], $priority);
-    }
-
-    public function addRoutingMiddlewarePipe(array $middlewares, int $priority = 100) : void
-    {
-        $this->checkMiddlewareArray($middlewares);
-        $this->routingQueue->insert(\array_values($middlewares), $priority);
-    }
-
-    public function addDispatchMiddleware(string $middleware, int $priority = 100) : void
-    {
-        $this->checkMiddlewareString($middleware);
-        $this->dispatchQueue->insert([$middleware], $priority);
-    }
-
-    public function addDispatchMiddlewarePipe(array $middlewares, int $priority = 100) : void
-    {
-        $this->checkMiddlewareArray($middlewares);
-        $this->dispatchQueue->insert(\array_values($middlewares), $priority);
-    }
-
-    /**
-     * @param string $middleware
-     * @return bool
-     */
-    private function checkMiddlewareString(string $middleware) : void
-    {
-        $implements = class_implements($middleware);
-        if (!\in_array(MiddlewareInterface::class, $implements)) {
+        if ($priority === self::PRIORITY_DISPATCHING || $priority === self::PRIORITY_ROUTING) {
             //TODO Exception
-            throw new \InvalidArgumentException(sprintf("'%s' must implement '%s'", $middleware, MiddlewareInterface::class));
         }
     }
 
-    /**
-     * @param array $middlewares
-     */
-    private function checkMiddlewareArray(array $middlewares) : void
+    public function group(callable $callback): void
     {
-        foreach ($middlewares as $middleware) {
-            $this->checkMiddlewareString($middleware);
+        $groupPipeConfigurator = new GroupPipeConfigurator();
+        $callback($groupPipeConfigurator);
+
+        $before = array_reverse($groupPipeConfigurator->getBefore());
+        $after = $groupPipeConfigurator->getAfter();
+
+        /** @var RouteConfigurator $route */
+        foreach ($groupPipeConfigurator->getRoutes() as $route) {
+            foreach ($before as $middleware) {
+                $route->before($middleware, true);
+            }
+
+            foreach ($after as $middleware) {
+                $route->after($middleware);
+            }
+
+            $this->route($route);
         }
     }
 
-    public function getPipeConfig(): PipeConfig
+    public function segment(string $segment, callable $callback, int $priority = self::PRIORITY_PRE_ROUTING): void
     {
-        $globalPipe = [];
-        if (!$this->globalQueue->isEmpty()) {
-            $this->globalQueue->top();
-            while ($this->globalQueue->valid()) {
-                $globalPipe[] = $this->globalQueue->extract();
-            }
+        if ($priority <= self::PRIORITY_ROUTING) {
+            //TODO Exception
         }
-        $routingPipe = [];
-        if (!$this->routingQueue->isEmpty()) {
-            $this->routingQueue->top();
-            while ($this->routingQueue->valid()) {
-                $routingPipe[] = $this->routingQueue->extract();
-            }
+        $pipeConfigurator = new PipeConfigurator($this->prefix . $segment);
+        $callback($pipeConfigurator);
+
+        $this->middlewareQueue->insert([
+            'type' => PipeConfig::TYPE_SEGMENT,
+            'value' => [
+                'segment' => $segment,
+                'pipeConfig' => new PipeConfig($pipeConfigurator),
+            ]
+        ], $priority);
+    }
+
+    public function pipe(string $middleware, int $priority = self::PRIORITY_PRE_ROUTING): void
+    {
+        $this->validatePriority($priority);
+        $this->middlewareQueue->insert([
+            'type' => PipeConfig::TYPE_PIPE,
+            'value' => $middleware
+        ], $priority);
+    }
+
+    public function route(RouteConfigurator $routeConfigurator): void
+    {
+        $this->routes[] = $routeConfigurator;
+    }
+
+    public function any(string $path, string $action, string $name, callable $callback = null): void
+    {
+        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator->enableDelete();
+        $routeConfigurator->enableGet();
+        $routeConfigurator->enablePost();
+        $routeConfigurator->enablePatch();
+        $routeConfigurator->enableDelete();
+
+        if ($callback !== null) {
+            $callback($routeConfigurator);
         }
-        $dispatchPipe = [];
-        if (!$this->dispatchQueue->isEmpty()) {
-            $this->dispatchQueue->top();
-            while ($this->dispatchQueue->valid()) {
-                $dispatchPipe[] = $this->dispatchQueue->extract();
+
+        $this->route($routeConfigurator);
+    }
+
+    public function get(string $path, string $action, string $name, callable $callback = null): void
+    {
+        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator->enableGet();
+
+        if ($callback !== null) {
+            $callback($routeConfigurator);
+        }
+
+        $this->route($routeConfigurator);
+    }
+
+    public function post(string $path, string $action, string $name, callable $callback = null): void
+    {
+        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator->enablePost();
+
+        if ($callback !== null) {
+            $callback($routeConfigurator);
+        }
+
+        $this->route($routeConfigurator);
+    }
+
+    public function patch(string $path, string $action, string $name, callable $callback = null): void
+    {
+        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator->enablePatch();
+
+        if ($callback !== null) {
+            $callback($routeConfigurator);
+        }
+
+        $this->route($routeConfigurator);
+    }
+
+    public function put(string $path, string $action, string $name, callable $callback = null): void
+    {
+        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator->enablePut();
+
+        if ($callback !== null) {
+            $callback($routeConfigurator);
+        }
+
+        $this->route($routeConfigurator);
+    }
+
+    public function delete(string $path, string $action, string $name, callable $callback = null): void
+    {
+        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator->enableDelete();
+
+        if ($callback !== null) {
+            $callback($routeConfigurator);
+        }
+
+        $this->route($routeConfigurator);
+    }
+
+    public function getRoutes(): array
+    {
+        $routes = [];
+
+        foreach ($this->routes as $routeConfigurator) {
+            $routes[] = [
+                'name' => $routeConfigurator->getName(),
+                'path' => $this->prefix . $routeConfigurator->getPath(),
+                'pipe' => $routeConfigurator->getPipe(),
+                'methods' => $routeConfigurator->getMethods(),
+            ];
+        }
+
+        return $routes;
+    }
+
+    public function getMiddlewarePipe(): array
+    {
+        $pipe = [];
+        if (!$this->middlewareQueue->isEmpty()) {
+            $this->middlewareQueue->top();
+            while ($this->middlewareQueue->valid()) {
+                $pipe[] = $this->middlewareQueue->extract();
             }
         }
 
-        return new $this->pipeClass(
-            $globalPipe,
-            $routingPipe,
-            $dispatchPipe
-        );
+        return $pipe;
     }
 }

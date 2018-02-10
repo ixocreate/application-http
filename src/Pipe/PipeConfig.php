@@ -1,66 +1,32 @@
 <?php
-/**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
- * @license MIT License
- */
-
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
 class PipeConfig implements \Serializable
 {
-    /**
-     * @var array
-     */
-    private $globalPipe;
-    /**
-     * @var array
-     */
-    private $routingPipe;
-    /**
-     * @var array
-     */
-    private $dispatchPipe;
+    public const TYPE_PIPE = "pipe";
+    public const TYPE_SEGMENT = "segment";
+    public const TYPE_ROUTING = "routing";
+    public const TYPE_DISPATCHING = "dispatching";
 
-    /**
-     * PipeConfig constructor.
-     * @param array $globalPipe
-     * @param array $routingPipe
-     * @param array $dispatchPipe
-     */
-    public function __construct(array $globalPipe, array $routingPipe, array $dispatchPipe)
+    private $routes = [];
+
+    private $middlewarePipe = [];
+
+    public function __construct(PipeConfigurator $pipeConfigurator)
     {
-        $this->globalPipe = $globalPipe;
-        $this->routingPipe = $routingPipe;
-        $this->dispatchPipe = $dispatchPipe;
+        $this->routes = $pipeConfigurator->getRoutes();
+        $this->middlewarePipe = $pipeConfigurator->getMiddlewarePipe();
     }
 
-    /**
-     * @return array
-     */
-    public function getGlobalPipe(): array
+    final public function getRoutes(): array
     {
-        return $this->globalPipe;
+        return $this->routes;
     }
 
-    /**
-     * @return array
-     */
-    public function getRoutingPipe(): array
+    final public function getMiddlewarePipe(): array
     {
-        return $this->routingPipe;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDispatchPipe(): array
-    {
-        return $this->dispatchPipe;
+        return $this->middlewarePipe;
     }
 
     /**
@@ -69,9 +35,8 @@ class PipeConfig implements \Serializable
     public function serialize()
     {
         return \serialize([
-            'globalPipe' => $this->globalPipe,
-            'routingPipe' => $this->routingPipe,
-            'dispatchPipe' => $this->dispatchPipe,
+            'routes' => $this->routes,
+            'middlewarePipe' => $this->middlewarePipe,
         ]);
     }
 
@@ -80,10 +45,21 @@ class PipeConfig implements \Serializable
      */
     public function unserialize($serialized)
     {
+        $this->routes = [];
+        $this->middlewarePipe = [];
+
         $array = \unserialize($serialized);
 
-        $this->globalPipe = $array['globalPipe'];
-        $this->routingPipe = $array['routingPipe'];
-        $this->dispatchPipe = $array['dispatchPipe'];
+        if (!\is_array($array)) {
+            return;
+        }
+
+        if (!empty($array['routes']) && \is_array($array['routes'])) {
+            $this->routes = $array['routes'];
+        }
+
+        if (!empty($array['middlewarePipe']) && \is_array($array['middlewarePipe'])) {
+            $this->routes = $array['middlewarePipe'];
+        }
     }
 }
