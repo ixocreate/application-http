@@ -11,6 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp;
 
+use KiwiSuite\Application\ApplicationConfigurator;
 use KiwiSuite\Application\ApplicationInterface;
 use KiwiSuite\Application\Bootstrap;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
@@ -44,5 +45,13 @@ final class HttpApplication implements ApplicationInterface
         ($serviceManager->build(RequestHandlerRunner::class, [
             PipeConfig::class => $serviceManager->get(PipeConfig::class),
         ]))->run();
+    }
+
+    /**
+     * @param ApplicationConfigurator $applicationConfigurator
+     */
+    public function configure(ApplicationConfigurator $applicationConfigurator): void
+    {
+
     }
 }
