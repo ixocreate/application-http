@@ -52,6 +52,5 @@ final class HttpApplication implements ApplicationInterface
      */
     public function configure(ApplicationConfigurator $applicationConfigurator): void
     {
-
     }
 }

@@ -34,10 +34,10 @@ final class RequestHandlerRunnerFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return RequestHandlerRunner
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Zend\HttpHandlerRunner\Emitter\InvalidArgumentException
+     * @return RequestHandlerRunner
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
@@ -50,7 +50,7 @@ final class RequestHandlerRunnerFactory implements FactoryInterface
         return new RequestHandlerRunner(
             $container->get(MiddlewareSubManager::class)->build(SegmentMiddlewarePipe::class, [PipeConfig::class => $pipeConfig]),
             $emitter,
-            function (){
+            function () {
                 return ServerRequestFactory::fromGlobals();
             },
             function (\Throwable $e) use ($isDevelopment) : ResponseInterface {

@@ -14,9 +14,6 @@ namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
-use KiwiSuite\ProjectUri\Middleware\ProjectUriCheckMiddleware;
-use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
-use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 
 final class PipeConfiguratorItem implements ConfiguratorItemInterface
 {
@@ -25,7 +22,7 @@ final class PipeConfiguratorItem implements ConfiguratorItemInterface
      */
     public function getConfigurator()
     {
-        return new PipeConfigurator();;
+        return new PipeConfigurator();
     }
 
     /**

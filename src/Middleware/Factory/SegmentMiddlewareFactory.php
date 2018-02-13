@@ -1,7 +1,16 @@
 <?php
+/**
+ * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
+ *
+ * @package kiwi-suite/application-http
+ * @see https://github.com/kiwi-suite/application-http
+ * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Middleware\Factory;
 
-use function FastRoute\TestFixtures\empty_options_cached;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\ApplicationHttp\Middleware\SegmentMiddlewarePipe;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
@@ -26,9 +35,9 @@ final class SegmentMiddlewareFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return mixed
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return mixed
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
@@ -56,7 +65,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
                     $segmentMiddlewarePipe->pipe($middlewareFactory->prepare($pipeData['value']));
                     break;
                 case PipeConfig::TYPE_ROUTING:
-                    $segmentMiddlewarePipe->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig, $middlewareFactory, $fastRouter){
+                    $segmentMiddlewarePipe->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig, $middlewareFactory, $fastRouter) {
                         $routeMiddleware = new PathBasedRoutingMiddleware($fastRouter, new Response());
                         foreach ($pipeConfig->getRoutes() as $route) {
                             $routeMiddleware->route($route['path'], $middlewareFactory->pipeline($route['pipe']), $route['methods'], $route['name']);
@@ -80,7 +89,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
 
     private function getSegmentMiddleware(ServiceManagerInterface $container, array $pipeData, $fastRouterKey): CallableMiddlewareDecorator
     {
-        return new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($container, $pipeData, $fastRouterKey){
+        return new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($container, $pipeData, $fastRouterKey) {
             $uri = new Uri($pipeData['value']['segment']);
             if (!empty($uri->getScheme()) && $uri->getScheme() !== $request->getUri()->getScheme()) {
                 return $handler->handle($request);
@@ -100,7 +109,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
                     SegmentMiddlewarePipe::class,
                     [
                         PipeConfig::class => $pipeData['value']['pipeConfig'],
-                        'router' => $fastRouterKey
+                        'router' => $fastRouterKey,
                     ]
                 );
             $pathMiddlewareDecorator = new PathMiddlewareDecorator($uri->getPath(), $segmentMiddleware);

@@ -1,4 +1,13 @@
 <?php
+/**
+ * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
+ *
+ * @package kiwi-suite/application-http
+ * @see https://github.com/kiwi-suite/application-http
+ * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
@@ -33,11 +42,11 @@ final class PipeConfigurator
         $this->middlewareQueue = new SplPriorityQueue();
 
         $this->middlewareQueue->insert([
-            'type' => PipeConfig::TYPE_ROUTING
+            'type' => PipeConfig::TYPE_ROUTING,
         ], self::PRIORITY_ROUTING);
 
         $this->middlewareQueue->insert([
-            'type' => PipeConfig::TYPE_DISPATCHING
+            'type' => PipeConfig::TYPE_DISPATCHING,
         ], self::PRIORITY_DISPATCHING);
 
         $this->prefix = $prefix;
@@ -55,7 +64,7 @@ final class PipeConfigurator
         $groupPipeConfigurator = new GroupPipeConfigurator();
         $callback($groupPipeConfigurator);
 
-        $before = array_reverse($groupPipeConfigurator->getBefore());
+        $before = \array_reverse($groupPipeConfigurator->getBefore());
         $after = $groupPipeConfigurator->getAfter();
 
         /** @var RouteConfigurator $route */
@@ -85,7 +94,7 @@ final class PipeConfigurator
             'value' => [
                 'segment' => $segment,
                 'pipeConfig' => new PipeConfig($pipeConfigurator),
-            ]
+            ],
         ], $priority);
     }
 
@@ -94,7 +103,7 @@ final class PipeConfigurator
         $this->validatePriority($priority);
         $this->middlewareQueue->insert([
             'type' => PipeConfig::TYPE_PIPE,
-            'value' => $middleware
+            'value' => $middleware,
         ], $priority);
     }
 
