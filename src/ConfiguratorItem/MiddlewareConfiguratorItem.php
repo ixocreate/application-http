@@ -36,7 +36,7 @@ final class MiddlewareConfiguratorItem implements ConfiguratorItemInterface
     /**
      * @return string
      */
-    public function getConfiguratorName(): string
+    public function getVariableName(): string
     {
         return 'middlewareConfigurator';
     }
@@ -44,7 +44,7 @@ final class MiddlewareConfiguratorItem implements ConfiguratorItemInterface
     /**
      * @return string
      */
-    public function getConfiguratorFileName(): string
+    public function getFileName(): string
     {
         return 'middleware.php';
     }
