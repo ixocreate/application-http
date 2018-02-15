@@ -13,6 +13,7 @@ namespace KiwiSuite\ApplicationHttp\Bootstrap;
 
 use KiwiSuite\Application\Bootstrap\BootstrapInterface;
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorRegistry;
+use KiwiSuite\Application\ConfiguratorItem\ServiceManagerConfiguratorItem;
 use KiwiSuite\Application\Service\ServiceRegistry;
 use KiwiSuite\ApplicationHttp\ConfiguratorItem\MiddlewareConfiguratorItem;
 use KiwiSuite\ApplicationHttp\ConfiguratorItem\PipeConfiguratorItem;
@@ -36,13 +37,13 @@ final class ApplicationHttpBootstrap implements BootstrapInterface
     public function configure(ConfiguratorRegistry $configuratorRegistry): void
     {
         /** @var ServiceManagerConfigurator $serviceManagerConfigurator */
-        $serviceManagerConfigurator = $configuratorRegistry->getConfigurator('serviceManagerConfigurator');
+        $serviceManagerConfigurator = $configuratorRegistry->get(ServiceManagerConfiguratorItem::class);
         $serviceManagerConfigurator->addFactory(RequestHandlerRunner::class, RequestHandlerRunnerFactory::class);
         $serviceManagerConfigurator->addFactory(FastRouteRouter::class, FastRouterFactory::class);
         $serviceManagerConfigurator->addSubManager(MiddlewareSubManager::class, MiddlewareSubManagerFactory::class);
 
         /** @var ServiceManagerConfigurator $middlewareConfigurator */
-        $middlewareConfigurator = $configuratorRegistry->getConfigurator('middlewareConfigurator');
+        $middlewareConfigurator = $configuratorRegistry->get(MiddlewareConfiguratorItem::class);
         $middlewareConfigurator->addFactory(SegmentMiddlewarePipe::class, SegmentMiddlewareFactory::class);
     }
 
