@@ -22,9 +22,9 @@ use Zend\Diactoros\Response;
 use Zend\Diactoros\Uri;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
-use Zend\Expressive\Router\DispatchMiddleware;
 use Zend\Expressive\Router\FastRouteRouter;
-use Zend\Expressive\Router\PathBasedRoutingMiddleware;
+use Zend\Expressive\Router\Middleware\DispatchMiddleware;
+use Zend\Expressive\Router\Middleware\PathBasedRoutingMiddleware;
 use Zend\Stratigility\Middleware\CallableMiddlewareDecorator;
 use Zend\Stratigility\Middleware\PathMiddlewareDecorator;
 
@@ -66,7 +66,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
                     break;
                 case PipeConfig::TYPE_ROUTING:
                     $segmentMiddlewarePipe->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig, $middlewareFactory, $fastRouter) {
-                        $routeMiddleware = new PathBasedRoutingMiddleware($fastRouter, new Response());
+                        $routeMiddleware = new PathBasedRoutingMiddleware($fastRouter);
                         foreach ($pipeConfig->getRoutes() as $route) {
                             $routeMiddleware->route($route['path'], $middlewareFactory->pipeline($route['pipe']), $route['methods'], $route['name']);
                         }
