@@ -43,6 +43,8 @@ final class RouteConfigurator
      */
     private $after = [];
 
+    private $options = [];
+
     public function __construct(string $name, string $path, string $action)
     {
         $this->name = $name;
@@ -72,6 +74,11 @@ final class RouteConfigurator
         }
 
         $this->after[] = $middleware;
+    }
+
+    public function addOption(string $name, $value): void
+    {
+        $this->options[$name] = $value;
     }
 
     public function enableGet(): void
@@ -142,5 +149,10 @@ final class RouteConfigurator
     public function getPipe(): array
     {
         return \array_merge($this->before, [$this->action], $this->after);
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 }

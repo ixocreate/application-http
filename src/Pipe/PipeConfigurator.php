@@ -198,6 +198,7 @@ final class PipeConfigurator
                 'path' => $this->prefix . $routeConfigurator->getPath(),
                 'pipe' => $routeConfigurator->getPipe(),
                 'methods' => $routeConfigurator->getMethods(),
+                'options' => $routeConfigurator->getOptions(),
             ];
         }
 
