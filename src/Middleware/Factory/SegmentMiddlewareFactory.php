@@ -58,14 +58,13 @@ final class SegmentMiddlewareFactory implements FactoryInterface
 
         /** @var PipeConfig $pipeConfig */
         $pipeConfig = $options[PipeConfig::class];
-
         foreach ($pipeConfig->getMiddlewarePipe() as $pipeData) {
             switch ($pipeData['type']) {
                 case PipeConfig::TYPE_PIPE:
                     $segmentMiddlewarePipe->pipe($middlewareFactory->prepare($pipeData['value']));
                     break;
                 case PipeConfig::TYPE_ROUTING:
-                    $segmentMiddlewarePipe->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig, $middlewareFactory, $fastRouter) {
+                    $callableMiddleware = new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig, $middlewareFactory, $fastRouter){
                         $routeMiddleware = new PathBasedRoutingMiddleware($fastRouter);
                         foreach ($pipeConfig->getRoutes() as $route) {
                             $expressiveRoute = $routeMiddleware->route(
@@ -78,7 +77,9 @@ final class SegmentMiddlewareFactory implements FactoryInterface
                         }
 
                         return $routeMiddleware->process($request, $handler);
-                    }));
+                    });
+
+                    $segmentMiddlewarePipe->pipe($callableMiddleware);
                     break;
                 case PipeConfig::TYPE_DISPATCHING:
                     $segmentMiddlewarePipe->pipe($middlewareFactory->lazy(DispatchMiddleware::class));

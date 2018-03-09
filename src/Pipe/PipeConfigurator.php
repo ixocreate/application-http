@@ -23,9 +23,9 @@ final class PipeConfigurator
     private const PRIORITY_DISPATCHING = 1000;
 
     /**
-     * @var RouteConfigurator[]
+     * @var SplPriorityQueue
      */
-    private $routes = [];
+    private $routesQueue;
 
     /**
      * @var SplPriorityQueue
@@ -37,9 +37,12 @@ final class PipeConfigurator
      */
     private $prefix;
 
+    private $segments = [];
+
     public function __construct(string $prefix = "")
     {
         $this->middlewareQueue = new SplPriorityQueue();
+        $this->routesQueue = new SplPriorityQueue();
 
         $this->middlewareQueue->insert([
             'type' => PipeConfig::TYPE_ROUTING,
@@ -86,16 +89,14 @@ final class PipeConfigurator
         if ($priority <= self::PRIORITY_ROUTING) {
             //TODO Exception
         }
-        $pipeConfigurator = new PipeConfigurator($this->prefix . $segment);
-        $callback($pipeConfigurator);
 
-        $this->middlewareQueue->insert([
-            'type' => PipeConfig::TYPE_SEGMENT,
-            'value' => [
-                'segment' => $segment,
-                'pipeConfig' => new PipeConfig($pipeConfigurator),
-            ],
-        ], $priority);
+        if (!isset($this->segments[$segment])) {
+            $this->segments[$segment] = [
+                'pipeConfigurator' => new PipeConfigurator($this->prefix . $segment),
+                'priority' => $priority,
+            ];
+        }
+        $callback($this->segments[$segment]['pipeConfigurator']);
     }
 
     public function pipe(string $middleware, int $priority = self::PRIORITY_PRE_ROUTING): void
@@ -109,7 +110,7 @@ final class PipeConfigurator
 
     public function route(RouteConfigurator $routeConfigurator): void
     {
-        $this->routes[] = $routeConfigurator;
+        $this->routesQueue->insert($routeConfigurator, $routeConfigurator->getPriority());
     }
 
     public function any(string $path, string $action, string $name, callable $callback = null): void
@@ -191,15 +192,18 @@ final class PipeConfigurator
     public function getRoutes(): array
     {
         $routes = [];
-
-        foreach ($this->routes as $routeConfigurator) {
-            $routes[] = [
-                'name' => $routeConfigurator->getName(),
-                'path' => $this->prefix . $routeConfigurator->getPath(),
-                'pipe' => $routeConfigurator->getPipe(),
-                'methods' => $routeConfigurator->getMethods(),
-                'options' => $routeConfigurator->getOptions(),
-            ];
+        if (!$this->routesQueue->isEmpty()) {
+            $this->routesQueue->top();
+            while ($this->routesQueue->valid()) {
+                $routeConfigurator = $this->routesQueue->extract();
+                $routes[] =  [
+                    'name' => $routeConfigurator->getName(),
+                    'path' => $routeConfigurator->getPath(),
+                    'pipe' => $routeConfigurator->getPipe(),
+                    'methods' => $routeConfigurator->getMethods(),
+                    'options' => $routeConfigurator->getOptions(),
+                ];
+            }
         }
 
         return $routes;
@@ -207,6 +211,16 @@ final class PipeConfigurator
 
     public function getMiddlewarePipe(): array
     {
+        foreach ($this->segments as $segment => $segmentData) {
+            $this->middlewareQueue->insert([
+                'type' => PipeConfig::TYPE_SEGMENT,
+                'value' => [
+                    'segment' => $segment,
+                    'pipeConfig' => new PipeConfig($segmentData['pipeConfigurator']),
+                ],
+            ], $segmentData['priority']);
+        }
+
         $pipe = [];
         if (!$this->middlewareQueue->isEmpty()) {
             $this->middlewareQueue->top();

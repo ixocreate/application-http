@@ -45,6 +45,8 @@ final class RouteConfigurator
 
     private $options = [];
 
+    private $priority = 0;
+
     public function __construct(string $name, string $path, string $action)
     {
         $this->name = $name;
@@ -154,5 +156,15 @@ final class RouteConfigurator
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function setPriority(int $priority): void
+    {
+        $this->priority = $priority;
+    }
+
+    public function getPriority(): int
+    {
+        return $this->priority;
     }
 }
