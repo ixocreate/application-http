@@ -12,8 +12,8 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.1",
-        "zendframework/zend-expressive": "=3.0.0alpha5",
-        "zendframework/zend-expressive-fastroute": "=3.0.0alpha1",
+        "zendframework/zend-expressive": "=3.0.0rc3",
+        "zendframework/zend-expressive-fastroute": "=3.0.0rc4",
         "zendframework/zend-expressive-helpers": "=5.0.0alpha3",
         "kiwi-suite/application": "dev-develop"
     },
