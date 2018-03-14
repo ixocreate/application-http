@@ -27,8 +27,6 @@ final class MiddlewareConfiguratorItem implements ConfiguratorItemInterface
     public function getConfigurator()
     {
         $serviceManagerConfigurator = new ServiceManagerConfigurator(MiddlewareServiceManagerConfig::class);
-        $serviceManagerConfigurator->addFactory(ImplicitHeadMiddleware::class, ImplicitHeadMiddlewareFactory::class);
-        $serviceManagerConfigurator->addFactory(ImplicitOptionsMiddleware::class, ImplicitOptionsMiddlewareFactory::class);
 
         return $serviceManagerConfigurator;
     }

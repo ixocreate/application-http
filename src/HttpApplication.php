@@ -41,7 +41,6 @@ final class HttpApplication implements ApplicationInterface
     {
         /** @var ServiceManager $serviceManager */
         $serviceManager = (new Bootstrap())->bootstrap($this->bootstrapDirectory, $this);
-
         ($serviceManager->build(RequestHandlerRunner::class, [
             PipeConfig::class => $serviceManager->get(PipeConfig::class),
         ]))->run();

@@ -13,9 +13,9 @@ namespace KiwiSuite\ApplicationHttp\Middleware\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareServiceManagerConfig;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
-use KiwiSuite\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\ServiceManager\SubManager\SubManagerFactoryInterface;
-use KiwiSuite\ServiceManager\SubManager\SubManagerInterface;
+use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
+use KiwiSuite\Contract\ServiceManager\SubManager\SubManagerFactoryInterface;
+use KiwiSuite\Contract\ServiceManager\SubManager\SubManagerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
 class MiddlewareSubManagerFactory implements SubManagerFactoryInterface
