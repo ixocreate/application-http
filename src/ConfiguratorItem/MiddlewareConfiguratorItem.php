@@ -12,12 +12,8 @@ declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
 
 use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
-use KiwiSuite\ApplicationHttp\Middleware\Factory\ImplicitHeadMiddlewareFactory;
-use KiwiSuite\ApplicationHttp\Middleware\Factory\ImplicitOptionsMiddlewareFactory;
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareServiceManagerConfig;
 use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
-use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
-use Zend\Expressive\Middleware\ImplicitOptionsMiddleware;
 
 final class MiddlewareConfiguratorItem implements ConfiguratorItemInterface
 {
