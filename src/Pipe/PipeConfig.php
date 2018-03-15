@@ -11,7 +11,9 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
-class PipeConfig implements \Serializable
+use KiwiSuite\Contract\Application\SerializableServiceInterface;
+
+class PipeConfig implements SerializableServiceInterface
 {
     public const TYPE_PIPE = "pipe";
     public const TYPE_SEGMENT = "segment";

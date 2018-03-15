@@ -9,18 +9,18 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\ConfiguratorItem;
+namespace KiwiSuite\ApplicationHttp\BootstrapItem;
 
-use KiwiSuite\Application\ConfiguratorItem\ConfiguratorItemInterface;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
+use KiwiSuite\Contract\Application\BootstrapItemInterface;
+use KiwiSuite\Contract\Application\ConfiguratorInterface;
 
-final class PipeConfiguratorItem implements ConfiguratorItemInterface
+final class PipeBootstrapItem implements BootstrapItemInterface
 {
     /**
-     * @return mixed
+     * @return ConfiguratorInterface
      */
-    public function getConfigurator()
+    public function getConfigurator(): ConfiguratorInterface
     {
         return new PipeConfigurator();
     }
@@ -30,7 +30,7 @@ final class PipeConfiguratorItem implements ConfiguratorItemInterface
      */
     public function getVariableName(): string
     {
-        return 'pipeConfigurator';
+        return 'pipe';
     }
 
     /**
@@ -39,14 +39,5 @@ final class PipeConfiguratorItem implements ConfiguratorItemInterface
     public function getFileName(): string
     {
         return 'pipe.php';
-    }
-
-    /**
-     * @param PipeConfigurator $configurator
-     * @return \Serializable
-     */
-    public function getService($configurator): \Serializable
-    {
-        return new PipeConfig($configurator);
     }
 }

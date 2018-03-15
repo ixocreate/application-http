@@ -11,9 +11,11 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
+use KiwiSuite\Contract\Application\ConfiguratorInterface;
+use KiwiSuite\Contract\Application\ServiceRegistryInterface;
 use Zend\Stdlib\SplPriorityQueue;
 
-final class PipeConfigurator
+final class PipeConfigurator implements ConfiguratorInterface
 {
     public const PRIORITY_PRE_ROUTING = 1000000;
     public const PRIORITY_POST_ROUTING = 499999;
@@ -230,5 +232,10 @@ final class PipeConfigurator
         }
 
         return $pipe;
+    }
+
+    public function registerService(ServiceRegistryInterface $serviceRegistry): void
+    {
+        $serviceRegistry->add(PipeConfig::class, new PipeConfig($this));
     }
 }
