@@ -93,12 +93,17 @@ final class PipeConfigurator implements ConfiguratorInterface
         }
 
         if (!isset($this->segments[$segment])) {
-            $this->segments[$segment] = [
-                'pipeConfigurator' => new PipeConfigurator($this->prefix . $segment),
-                'priority' => $priority,
-            ];
+            $this->segments[$segment] = new PipeConfigurator($this->prefix . $segment);
+
+            $this->middlewareQueue->insert([
+                'type' => PipeConfig::TYPE_SEGMENT,
+                'value' => [
+                    'segment' => $segment,
+                    'pipeConfigurator' => $this->segments[$segment],
+                ],
+            ], $priority);
         }
-        $callback($this->segments[$segment]['pipeConfigurator']);
+        $callback($this->segments[$segment]);
     }
 
     public function pipe(string $middleware, int $priority = self::PRIORITY_PRE_ROUTING): void
@@ -195,9 +200,7 @@ final class PipeConfigurator implements ConfiguratorInterface
     {
         $routes = [];
         if (!$this->routesQueue->isEmpty()) {
-            $this->routesQueue->top();
-            while ($this->routesQueue->valid()) {
-                $routeConfigurator = $this->routesQueue->extract();
+            foreach ($this->routesQueue as $routeConfigurator) {
                 $routes[] =  [
                     'name' => $routeConfigurator->getName(),
                     'path' => $routeConfigurator->getPath(),
@@ -213,21 +216,14 @@ final class PipeConfigurator implements ConfiguratorInterface
 
     public function getMiddlewarePipe(): array
     {
-        foreach ($this->segments as $segment => $segmentData) {
-            $this->middlewareQueue->insert([
-                'type' => PipeConfig::TYPE_SEGMENT,
-                'value' => [
-                    'segment' => $segment,
-                    'pipeConfig' => new PipeConfig($segmentData['pipeConfigurator']),
-                ],
-            ], $segmentData['priority']);
-        }
-
         $pipe = [];
         if (!$this->middlewareQueue->isEmpty()) {
-            $this->middlewareQueue->top();
-            while ($this->middlewareQueue->valid()) {
-                $pipe[] = $this->middlewareQueue->extract();
+            foreach ($this->middlewareQueue as $middleware) {
+                if ($middleware['type'] === PipeConfig::TYPE_SEGMENT) {
+                    $middleware['value']['pipeConfig'] = new PipeConfig($middleware['value']['pipeConfigurator']);
+                    unset($middleware['value']['pipeConfigurator']);
+                }
+                $pipe[] = $middleware;
             }
         }
 
