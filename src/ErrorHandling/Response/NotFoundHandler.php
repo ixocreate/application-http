@@ -21,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class NotFoundHandler implements MiddlewareInterface
 {
-    public const TEMPLATE_DEFAULT = 'ErrorHandling::404';
+    public const TEMPLATE_DEFAULT = 'error::404';
 
     private $renderer;
 

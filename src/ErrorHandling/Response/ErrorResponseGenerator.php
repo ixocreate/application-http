@@ -32,7 +32,7 @@ final class ErrorResponseGenerator
      */
     private $renderer;
 
-    public const TEMPLATE_DEFAULT = 'ErrorHandling::ErrorHandling';
+    public const TEMPLATE_DEFAULT = 'error::error';
 
     /**
      * ErrorResponseGenerator constructor.
