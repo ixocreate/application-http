@@ -74,7 +74,7 @@ final class GroupPipeConfigurator
 
     public function any(string $path, string $action, string $name, callable $callback = null): void
     {
-        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enableDelete();
         $routeConfigurator->enableGet();
         $routeConfigurator->enablePost();
@@ -90,7 +90,7 @@ final class GroupPipeConfigurator
 
     public function get(string $path, string $action, string $name, callable $callback = null): void
     {
-        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enableGet();
 
         if ($callback !== null) {
@@ -102,7 +102,7 @@ final class GroupPipeConfigurator
 
     public function post(string $path, string $action, string $name, callable $callback = null): void
     {
-        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enablePost();
 
         if ($callback !== null) {
@@ -114,7 +114,7 @@ final class GroupPipeConfigurator
 
     public function patch(string $path, string $action, string $name, callable $callback = null): void
     {
-        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enablePatch();
 
         if ($callback !== null) {
@@ -126,7 +126,7 @@ final class GroupPipeConfigurator
 
     public function put(string $path, string $action, string $name, callable $callback = null): void
     {
-        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enablePut();
 
         if ($callback !== null) {
@@ -138,7 +138,7 @@ final class GroupPipeConfigurator
 
     public function delete(string $path, string $action, string $name, callable $callback = null): void
     {
-        $routeConfigurator = new RouteConfigurator($name, $path, $action);
+        $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enableDelete();
 
         if ($callback !== null) {

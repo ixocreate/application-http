@@ -47,12 +47,12 @@ final class RouteConfigurator
 
     private $priority = 0;
 
-    public function __construct(string $name, string $path, string $action)
+    public function __construct(string $path, string $action, string $name)
     {
-        $this->name = $name;
         $this->path = $path;
         //TODO check MiddlewareInterface|HandlerInterface
         $this->action = $action;
+        $this->name = $name;
     }
 
     public function before(string $middleware, bool $prepend = false): void
