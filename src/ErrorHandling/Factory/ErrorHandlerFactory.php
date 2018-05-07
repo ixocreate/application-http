@@ -31,16 +31,18 @@ final class ErrorHandlerFactory implements FactoryInterface
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
         $generator = $container->has(ErrorResponseGenerator::class)
-            ? function( \Throwable $e,
+            ? function (
+                \Throwable $e,
                         ServerRequestInterface $request,
-                        ResponseInterface $response) use ($container) {
+                        ResponseInterface $response
+            ) use ($container) {
                 $generator = $container->get(ErrorResponseGenerator::class);
                 return $generator($e, $request, $response);
             }
-            : null;
+        : null;
 
         return new ErrorHandler(
-            function() {
+            function () {
                 return new Response();
             },
             $generator

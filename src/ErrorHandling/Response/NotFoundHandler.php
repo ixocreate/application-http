@@ -97,7 +97,6 @@ final class NotFoundHandler implements MiddlewareInterface
         Renderer $renderer,
         ServerRequestInterface $request
     ) : ResponseInterface {
-
         $response = ($this->responseFactory)()->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
         $response->getBody()->write(
             $renderer->render($this->template, ['request' => $request])

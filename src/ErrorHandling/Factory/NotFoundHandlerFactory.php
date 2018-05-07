@@ -25,9 +25,9 @@ final class NotFoundHandlerFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return NotFoundHandler|mixed
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return NotFoundHandler|mixed
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
@@ -42,7 +42,7 @@ final class NotFoundHandlerFactory implements FactoryInterface
             : NotFoundHandler::TEMPLATE_DEFAULT;
 
         return new NotFoundHandler(
-            function() {
+            function () {
                 return new Response();
             },
             $renderer,

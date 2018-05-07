@@ -27,9 +27,9 @@ final class WhoopsFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return mixed|Whoops
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return mixed|Whoops
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
@@ -67,13 +67,13 @@ final class WhoopsFactory implements FactoryInterface
         }
 
         if (! empty($config['json_exceptions']['ajax_only'])) {
-            if (method_exists(WhoopsUtil::class, 'isAjaxRequest')) {
+            if (\method_exists(WhoopsUtil::class, 'isAjaxRequest')) {
                 // Whoops 2.x; don't push handler on stack unless we are in
                 // an XHR request.
                 if (! WhoopsUtil::isAjaxRequest()) {
                     return;
                 }
-            } elseif (method_exists($handler, 'onlyForAjaxRequests')) {
+            } elseif (\method_exists($handler, 'onlyForAjaxRequests')) {
                 // Whoops 1.x
                 $handler->onlyForAjaxRequests(true);
             }
@@ -96,15 +96,15 @@ final class WhoopsFactory implements FactoryInterface
 
         $editor = $config['editor'];
 
-        if (is_callable($editor)) {
+        if (\is_callable($editor)) {
             $handler->setEditor($editor);
             return;
         }
 
-        if (! is_string($editor)) {
-            throw new Exception\InvalidServiceException(sprintf(
+        if (! \is_string($editor)) {
+            throw new Exception\InvalidServiceException(\sprintf(
                 'Whoops editor must be a string editor name, string service name, or callable; received "%s"',
-                is_object($editor) ? get_class($editor) : gettype($editor)
+                \is_object($editor) ? \get_class($editor) : \gettype($editor)
             ));
         }
 

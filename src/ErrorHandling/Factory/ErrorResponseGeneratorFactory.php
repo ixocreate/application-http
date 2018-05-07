@@ -26,9 +26,9 @@ final class ErrorResponseGeneratorFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return ErrorResponseGenerator|mixed|WhoopsErrorResponseGenerator
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @return ErrorResponseGenerator|mixed|WhoopsErrorResponseGenerator
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {

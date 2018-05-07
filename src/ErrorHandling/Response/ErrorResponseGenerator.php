@@ -94,7 +94,6 @@ final class ErrorResponseGenerator
         array $templateData,
         ResponseInterface $response
     ) : ResponseInterface {
-
         $response->getBody()
             ->write($renderer->render($this->template, $templateData));
 
@@ -117,14 +116,14 @@ final class ErrorResponseGenerator
      * @param Throwable $e
      * @return JsonResponse
      */
-    private function prepareJsonErrorPlainResponse(Throwable $e) : JsonResponse {
+    private function prepareJsonErrorPlainResponse(Throwable $e) : JsonResponse
+    {
         return new JsonResponse([
-            'class' => get_class($e),
+            'class' => \get_class($e),
             'file' => $e->getFile(),
             'line' => $e->getLine(),
             'message' => $e->getMessage(),
             'stackTrace' => $e->getTrace(),
         ]);
     }
-
 }
