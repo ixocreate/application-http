@@ -125,7 +125,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
      */
     private function createSegmentMiddleware(SegmentConfig $segmentConfig): MiddlewareInterface
     {
-        return $this->middlewareFactory->callable(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($segmentConfig, $pipeData, $fastRouterKey) {
+        return $this->middlewareFactory->callable(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($segmentConfig) {
             $uri = new Uri($segmentConfig->segment());
             if (!$this->checkUri($uri, $request)) {
                 return $handler->handle($request);
