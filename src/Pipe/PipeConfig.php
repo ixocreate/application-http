@@ -13,31 +13,56 @@ namespace KiwiSuite\ApplicationHttp\Pipe;
 
 use KiwiSuite\Contract\Application\SerializableServiceInterface;
 
-class PipeConfig implements SerializableServiceInterface
+final class PipeConfig implements SerializableServiceInterface
 {
-    public const TYPE_PIPE = "pipe";
-    public const TYPE_SEGMENT = "segment";
-    public const TYPE_ROUTING = "routing";
-    public const TYPE_DISPATCHING = "dispatching";
-
+    /**
+     * @var array
+     */
     private $routes = [];
 
+    /**
+     * @var array
+     */
     private $middlewarePipe = [];
 
+    /**
+     * @var string
+     */
+    private $router;
+
+    /**
+     * PipeConfig constructor.
+     * @param PipeConfigurator $pipeConfigurator
+     */
     public function __construct(PipeConfigurator $pipeConfigurator)
     {
         $this->routes = $pipeConfigurator->getRoutes();
         $this->middlewarePipe = $pipeConfigurator->getMiddlewarePipe();
+        $this->router = $pipeConfigurator->getRouter();
     }
 
-    final public function getRoutes(): array
+    /**
+     * @return array
+     */
+    public function getRoutes(): array
     {
         return $this->routes;
     }
 
-    final public function getMiddlewarePipe(): array
+    /**
+     * @return array
+     */
+    public function getMiddlewarePipe(): array
     {
         return $this->middlewarePipe;
+    }
+
+    /**
+     * @return string
+     */
+    public function router(): string
+    {
+        return $this->router;
     }
 
     /**
@@ -48,6 +73,7 @@ class PipeConfig implements SerializableServiceInterface
         return \serialize([
             'routes' => $this->routes,
             'middlewarePipe' => $this->middlewarePipe,
+            'router' => $this->router,
         ]);
     }
 
@@ -70,7 +96,11 @@ class PipeConfig implements SerializableServiceInterface
         }
 
         if (!empty($array['middlewarePipe']) && \is_array($array['middlewarePipe'])) {
-            $this->routes = $array['middlewarePipe'];
+            $this->middlewarePipe = $array['middlewarePipe'];
+        }
+
+        if (!empty($array['router']) && \is_string($array['router'])) {
+            $this->router = $array['router'];
         }
     }
 }

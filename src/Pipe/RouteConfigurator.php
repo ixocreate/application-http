@@ -45,7 +45,7 @@ final class RouteConfigurator
 
     private $options = [];
 
-    private $priority = 0;
+    private $priority = 500000;
 
     public function __construct(string $path, string $action, string $name)
     {
@@ -166,5 +166,10 @@ final class RouteConfigurator
     public function getPriority(): int
     {
         return $this->priority;
+    }
+
+    public function __invoke(callable $callable)
+    {
+        $callable($this);
     }
 }

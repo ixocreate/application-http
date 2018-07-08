@@ -11,7 +11,9 @@
 declare(strict_types=1);
 namespace KiwiSuite\ApplicationHttp\Pipe;
 
-final class GroupPipeConfigurator
+use Zend\Stdlib\PriorityList;
+
+final class GroupPipeConfigurator extends RouteCollectorConfigurator
 {
     /**
      * @var array
@@ -24,10 +26,20 @@ final class GroupPipeConfigurator
     private $after = [];
 
     /**
-     * @var array
+     * @var PriorityList
      */
-    private $routes = [];
+    private $groups;
 
+    public function __construct()
+    {
+        $this->groups = new PriorityList();
+        parent::__construct();
+    }
+
+    /**
+     * @param string $middleware
+     * @param bool $prepend
+     */
     public function before(string $middleware, bool $prepend = false): void
     {
         //TODO check MiddlewareInterface
@@ -40,6 +52,10 @@ final class GroupPipeConfigurator
         $this->before[] = $middleware;
     }
 
+    /**
+     * @param string $middleware
+     * @param bool $prepend
+     */
     public function after(string $middleware, bool $prepend = false): void
     {
         //TODO check MiddlewareInterface|HandlerInterface
@@ -67,89 +83,62 @@ final class GroupPipeConfigurator
         return $this->after;
     }
 
-    public function route(RouteConfigurator $routeConfigurator): void
+    /**
+     * @param callable $callable
+     */
+    public function __invoke(callable $callable)
     {
-        $this->routes[] = $routeConfigurator;
+        $callable($this);
     }
 
-    public function any(string $path, string $action, string $name, callable $callback = null): void
+    /**
+     * @param string $name
+     * @return GroupPipeConfigurator
+     */
+    public function group(string $name): GroupPipeConfigurator
     {
-        $routeConfigurator = new RouteConfigurator($path, $action, $name);
-        $routeConfigurator->enableDelete();
-        $routeConfigurator->enableGet();
-        $routeConfigurator->enablePost();
-        $routeConfigurator->enablePatch();
-        $routeConfigurator->enableDelete();
-
-        if ($callback !== null) {
-            $callback($routeConfigurator);
+        if ($this->groups->get($name)) {
+            $groupPipeConfigurator = $this->groups->get($name);
+        } else {
+            $groupPipeConfigurator = new GroupPipeConfigurator();
+            $this->groups->insert($name, $groupPipeConfigurator);
         }
 
-        $this->route($routeConfigurator);
+        return $groupPipeConfigurator;
     }
 
-    public function get(string $path, string $action, string $name, callable $callback = null): void
-    {
-        $routeConfigurator = new RouteConfigurator($path, $action, $name);
-        $routeConfigurator->enableGet();
-
-        if ($callback !== null) {
-            $callback($routeConfigurator);
-        }
-
-        $this->route($routeConfigurator);
-    }
-
-    public function post(string $path, string $action, string $name, callable $callback = null): void
-    {
-        $routeConfigurator = new RouteConfigurator($path, $action, $name);
-        $routeConfigurator->enablePost();
-
-        if ($callback !== null) {
-            $callback($routeConfigurator);
-        }
-
-        $this->route($routeConfigurator);
-    }
-
-    public function patch(string $path, string $action, string $name, callable $callback = null): void
-    {
-        $routeConfigurator = new RouteConfigurator($path, $action, $name);
-        $routeConfigurator->enablePatch();
-
-        if ($callback !== null) {
-            $callback($routeConfigurator);
-        }
-
-        $this->route($routeConfigurator);
-    }
-
-    public function put(string $path, string $action, string $name, callable $callback = null): void
-    {
-        $routeConfigurator = new RouteConfigurator($path, $action, $name);
-        $routeConfigurator->enablePut();
-
-        if ($callback !== null) {
-            $callback($routeConfigurator);
-        }
-
-        $this->route($routeConfigurator);
-    }
-
-    public function delete(string $path, string $action, string $name, callable $callback = null): void
-    {
-        $routeConfigurator = new RouteConfigurator($path, $action, $name);
-        $routeConfigurator->enableDelete();
-
-        if ($callback !== null) {
-            $callback($routeConfigurator);
-        }
-
-        $this->route($routeConfigurator);
-    }
-
+    /**
+     * @return RouteConfigurator[]
+     */
     public function getRoutes(): array
     {
-        return $this->routes;
+        $routes = parent::getRoutes();
+
+        $priorityList = new PriorityList();
+        /** @var RouteConfigurator $route */
+        foreach ($routes as $route) {
+            $priorityList->insert($route->getName(), clone $route, $route->getPriority());
+        }
+
+        /** @var GroupPipeConfigurator $group */
+        foreach ($this->groups->toArray() as $group) {
+            $routes = $group->getRoutes();
+
+            $before = \array_reverse($group->getBefore());
+            $after = $group->getAfter();
+
+            /** @var RouteConfigurator $route */
+            foreach ($routes as $route) {
+                $route = clone $route;
+                foreach ($before as $middleware) {
+                    $route->before($middleware, true);
+                }
+                foreach ($after as $middleware) {
+                    $route->after($middleware);
+                }
+                $priorityList->insert($route->getName(), $route, $route->getPriority());
+            }
+        }
+        return array_values($priorityList->toArray());
     }
 }
