@@ -13,5 +13,10 @@ interface RequestWrapperInterface
     /**
      * @return ServerRequestInterface
      */
+    public function originalRequest(): ServerRequestInterface;
+
+    /**
+     * @return ServerRequestInterface
+     */
     public function rootRequest(): ServerRequestInterface;
 }

@@ -26,7 +26,6 @@ final class RootRequestWrapperMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $rootRequest = new RootRequest($request);
-
         return $handler->handle($rootRequest);
     }
 

@@ -13,12 +13,18 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
     private $previousRequest;
 
     /**
-     * AbstractRequestWrapper constructor.
-     * @param ServerRequestInterface $previousRequest
+     * @var ServerRequestInterface
      */
-    public function __construct(ServerRequestInterface $previousRequest)
+    private $originalRequest;
+
+    /**
+     * AbstractRequestWrapper constructor.
+     * @param ServerRequestInterface $originalRequest
+     */
+    public function __construct(ServerRequestInterface $originalRequest)
     {
-        $this->previousRequest = $previousRequest;
+        $this->previousRequest = clone $originalRequest;
+        $this->originalRequest = $originalRequest;
     }
 
     /**
@@ -32,14 +38,22 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
     /**
      * @return ServerRequestInterface
      */
+    public function originalRequest(): ServerRequestInterface
+    {
+        return $this->originalRequest;
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
     public function rootRequest(): ServerRequestInterface
     {
-        $previousRequest = $this->previousRequest;
-        if ($previousRequest instanceof RequestWrapperInterface) {
-            $previousRequest = $previousRequest->rootRequest();
+        $rootRequest = $this->originalRequest;
+        if ($rootRequest instanceof RequestWrapperInterface) {
+            $rootRequest = $rootRequest->rootRequest();
         }
 
-        return $previousRequest;
+        return $rootRequest;
     }
 
     /**
