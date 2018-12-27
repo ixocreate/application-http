@@ -1,8 +1,14 @@
 <?php
-namespace Ixocreate\ApplicationHttp\Pipe\Config;
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
 
+declare(strict_types=1);
+
+namespace Ixocreate\ApplicationHttp\Pipe\Config;
 
 final class RoutingPipeConfig
 {
-
 }

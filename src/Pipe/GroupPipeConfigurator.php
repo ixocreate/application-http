@@ -1,14 +1,12 @@
 <?php
 /**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
 declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Pipe;
 
 use Zend\Stdlib\PriorityList;
@@ -139,6 +137,6 @@ final class GroupPipeConfigurator extends RouteCollectorConfigurator
                 $priorityList->insert($route->getName(), $route, $route->getPriority());
             }
         }
-        return array_values($priorityList->toArray());
+        return \array_values($priorityList->toArray());
     }
 }

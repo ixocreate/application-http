@@ -1,17 +1,14 @@
 <?php
 /**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
 declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Middleware\Factory;
 
-use function GuzzleHttp\Psr7\str;
 use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
 use Ixocreate\ApplicationHttp\Middleware\SegmentMiddlewarePipe;
 use Ixocreate\ApplicationHttp\Pipe\Config\DispatchingPipeConfig;
@@ -20,7 +17,6 @@ use Ixocreate\ApplicationHttp\Pipe\Config\RoutingPipeConfig;
 use Ixocreate\ApplicationHttp\Pipe\Config\SegmentConfig;
 use Ixocreate\ApplicationHttp\Pipe\Config\SegmentPipeConfig;
 use Ixocreate\ApplicationHttp\Pipe\PipeConfig;
-use Ixocreate\Contract\Http\SegmentMiddlewareInterface;
 use Ixocreate\Contract\Http\SegmentProviderInterface;
 use Ixocreate\Contract\ServiceManager\FactoryInterface;
 use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
@@ -31,11 +27,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Uri;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
-use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Expressive\Router\Middleware\DispatchMiddleware;
 use Zend\Expressive\Router\Middleware\RouteMiddleware;
 use Zend\Expressive\Router\RouteCollector;
-use Zend\Stratigility\Middleware\CallableMiddlewareDecorator;
 use Zend\Stratigility\Middleware\PathMiddlewareDecorator;
 
 final class SegmentMiddlewareFactory implements FactoryInterface
@@ -89,7 +83,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
         $pipeConfig = $options[PipeConfig::class];
 
         foreach ($pipeConfig->getMiddlewarePipe() as $itemPipeConfig) {
-            switch (get_class($itemPipeConfig)) {
+            switch (\get_class($itemPipeConfig)) {
                 case MiddlewareConfig::class:
                     $segmentMiddlewarePipe->pipe($this->createMiddleware($itemPipeConfig));
                     break;
@@ -152,7 +146,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
      */
     private function createSegmentPipeMiddleware(SegmentPipeConfig $pipeConfig): MiddlewareInterface
     {
-        return $this->middlewareFactory->callable(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig){
+        return $this->middlewareFactory->callable(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig) {
 
             /** @var SegmentProviderInterface $provider */
             $provider = $this->container->get($pipeConfig->provider());
@@ -167,7 +161,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
                 ->build(
                     SegmentMiddlewarePipe::class,
                     [
-                        PipeConfig::class => $pipeConfig->pipeConfig()
+                        PipeConfig::class => $pipeConfig->pipeConfig(),
                     ]
                 );
 
@@ -204,8 +198,7 @@ final class SegmentMiddlewareFactory implements FactoryInterface
      */
     private function createRoutingMiddleware(PipeConfig $pipeConfig): MiddlewareInterface
     {
-        return $this->middlewareFactory->callable(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig){
-
+        return $this->middlewareFactory->callable(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($pipeConfig) {
             $routeCollector = new RouteCollector($this->container->get($pipeConfig->router()));
             foreach ($pipeConfig->getRoutes() as $route) {
                 $expressiveRoute = $routeCollector->route(

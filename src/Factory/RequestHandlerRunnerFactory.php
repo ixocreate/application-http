@@ -1,14 +1,12 @@
 <?php
 /**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
 declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Factory;
 
 use Ixocreate\Application\ApplicationConfig;
@@ -29,7 +27,6 @@ use Zend\HttpHandlerRunner\RequestHandlerRunner;
 
 final class RequestHandlerRunnerFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName

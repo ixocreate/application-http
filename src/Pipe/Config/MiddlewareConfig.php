@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Pipe\Config;
 
 final class MiddlewareConfig implements \Serializable
@@ -14,7 +22,6 @@ final class MiddlewareConfig implements \Serializable
      */
     public function __construct(string $middleware)
     {
-
         $this->middleware = $middleware;
     }
 
@@ -31,7 +38,7 @@ final class MiddlewareConfig implements \Serializable
      */
     public function serialize()
     {
-        return serialize($this->middleware);
+        return \serialize($this->middleware);
     }
 
     /**
@@ -39,6 +46,6 @@ final class MiddlewareConfig implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $this->middleware = unserialize($serialized);
+        $this->middleware = \unserialize($serialized);
     }
 }

@@ -1,14 +1,12 @@
 <?php
 /**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
 declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Pipe;
 
 use Ixocreate\ApplicationHttp\Pipe\Config\DispatchingPipeConfig;
@@ -24,10 +22,13 @@ use Zend\Stdlib\PriorityList;
 final class PipeConfigurator extends RouteCollectorConfigurator implements ConfiguratorInterface
 {
     public const PRIORITY_PRE_ROUTING = 1000000;
+
     public const PRIORITY_POST_ROUTING = 499999;
+
     public const PRIORITY_POST_DISPATCHING = 999;
 
     private const PRIORITY_ROUTING = 500000;
+
     private const PRIORITY_DISPATCHING = 1000;
 
     /**
@@ -64,7 +65,6 @@ final class PipeConfigurator extends RouteCollectorConfigurator implements Confi
         $this->middlewares = new PriorityList();
 
         parent::__construct();
-
     }
 
     /**
@@ -224,7 +224,7 @@ final class PipeConfigurator extends RouteCollectorConfigurator implements Confi
             $priorityList->insert('segmentPipe:' . $segmentPipe, new SegmentPipeConfig($segmentPipe, new PipeConfig($item['data'])), $item['priority']);
         }
 
-        return array_values($priorityList->toArray());
+        return \array_values($priorityList->toArray());
     }
 
     /**

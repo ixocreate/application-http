@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Pipe\Config;
 
 use Ixocreate\ApplicationHttp\Pipe\PipeConfig;
@@ -9,6 +17,7 @@ final class SegmentConfig implements \Serializable
      * @var string
      */
     private $segment;
+
     /**
      * @var PipeConfig
      */
@@ -21,7 +30,6 @@ final class SegmentConfig implements \Serializable
      */
     public function __construct(string $segment, PipeConfig $pipeConfig)
     {
-
         $this->segment = $segment;
         $this->pipeConfig = $pipeConfig;
     }
@@ -47,7 +55,7 @@ final class SegmentConfig implements \Serializable
      */
     public function serialize()
     {
-        return serialize([
+        return \serialize([
             'segment' => $this->segment,
             'pipeConfig' => $this->pipeConfig,
         ]);
@@ -58,7 +66,7 @@ final class SegmentConfig implements \Serializable
      */
     public function unserialize($serialized)
     {
-        $data = unserialize($serialized);
+        $data = \unserialize($serialized);
         $this->pipeConfig = $data['pipeConfig'];
         $this->segment = $data['segment'];
     }

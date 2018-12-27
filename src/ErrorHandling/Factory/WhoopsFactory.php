@@ -1,10 +1,7 @@
 <?php
 /**
- * kiwi-suite/application-http (https://github.com/kiwi-suite/application-http)
- *
- * @package kiwi-suite/application-http
- * @see https://github.com/kiwi-suite/application-http
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -81,6 +78,7 @@ final class WhoopsFactory implements FactoryInterface
 
         $whoops->pushHandler($handler);
     }
+
     /**
      * @param PrettyPageHandler $handler
      * @param $config

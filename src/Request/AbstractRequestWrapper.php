@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\ApplicationHttp\Request;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -61,7 +69,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      *
      * The string MUST contain only the HTTP version number (e.g., "1.1", "1.0").
      *
-     * @return string HTTP protocol version.
+     * @return string HTTP protocol version
      */
     public function getProtocolVersion()
     {
@@ -122,7 +130,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
     /**
      * Checks if a header exists by the given case-insensitive name.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param string $name case-insensitive header field name
      * @return bool Returns true if any header names match the given header
      *     name using a case-insensitive string comparison. Returns false if
      *     no matching header name is found in the message.
@@ -141,7 +149,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * If the header does not appear in the message, this method MUST return an
      * empty array.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param string $name case-insensitive header field name
      * @return string[] An array of string values as provided for the given
      *    header. If the header does not appear in the message, this method MUST
      *    return an empty array.
@@ -165,7 +173,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * If the header does not appear in the message, this method MUST return
      * an empty string.
      *
-     * @param string $name Case-insensitive header field name.
+     * @param string $name case-insensitive header field name
      * @return string A string of values as provided for the given header
      *    concatenated together using a comma. If the header does not appear in
      *    the message, this method MUST return an empty string.
@@ -185,10 +193,10 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * new and/or updated header and value.
      *
-     * @param string $name Case-insensitive header field name.
-     * @param string|string[] $value Header value(s).
+     * @param string $name case-insensitive header field name
+     * @param string|string[] $value header value(s)
+     * @throws \InvalidArgumentException for invalid header names or values
      * @return static
-     * @throws \InvalidArgumentException for invalid header names or values.
      */
     public function withHeader($name, $value)
     {
@@ -209,10 +217,10 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * new header and/or value.
      *
-     * @param string $name Case-insensitive header field name to add.
-     * @param string|string[] $value Header value(s).
+     * @param string $name case-insensitive header field name to add
+     * @param string|string[] $value header value(s)
+     * @throws \InvalidArgumentException for invalid header names or values
      * @return static
-     * @throws \InvalidArgumentException for invalid header names or values.
      */
     public function withAddedHeader($name, $value)
     {
@@ -231,7 +239,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that removes
      * the named header.
      *
-     * @param string $name Case-insensitive header field name to remove.
+     * @param string $name case-insensitive header field name to remove
      * @return static
      */
     public function withoutHeader($name)
@@ -245,7 +253,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
     /**
      * Gets the body of the message.
      *
-     * @return StreamInterface Returns the body as a stream.
+     * @return StreamInterface returns the body as a stream
      */
     public function getBody()
     {
@@ -261,9 +269,9 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return a new instance that has the
      * new body stream.
      *
-     * @param StreamInterface $body Body.
+     * @param StreamInterface $body body
+     * @throws \InvalidArgumentException when the body is not valid
      * @return static
-     * @throws \InvalidArgumentException When the body is not valid.
      */
     public function withBody(StreamInterface $body)
     {
@@ -306,7 +314,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * changed request target.
      *
-     * @link http://tools.ietf.org/html/rfc7230#section-5.3 (for the various
+     * @see http://tools.ietf.org/html/rfc7230#section-5.3 (for the various
      *     request-target forms allowed in request messages)
      * @param mixed $requestTarget
      * @return static
@@ -322,7 +330,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
     /**
      * Retrieves the HTTP method of the request.
      *
-     * @return string Returns the request method.
+     * @return string returns the request method
      */
     public function getMethod()
     {
@@ -340,9 +348,9 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * changed request method.
      *
-     * @param string $method Case-sensitive method.
+     * @param string $method case-sensitive method
+     * @throws \InvalidArgumentException for invalid HTTP methods
      * @return static
-     * @throws \InvalidArgumentException for invalid HTTP methods.
      */
     public function withMethod($method)
     {
@@ -357,9 +365,9 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      *
      * This method MUST return a UriInterface instance.
      *
-     * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     * @return UriInterface Returns a UriInterface instance
-     *     representing the URI of the request.
+     * @see http://tools.ietf.org/html/rfc3986#section-4.3
+     * @return UriInterface returns a UriInterface instance
+     *     representing the URI of the request
      */
     public function getUri()
     {
@@ -391,9 +399,9 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * new UriInterface instance.
      *
-     * @link http://tools.ietf.org/html/rfc3986#section-4.3
-     * @param UriInterface $uri New request URI to use.
-     * @param bool $preserveHost Preserve the original state of the Host header.
+     * @see http://tools.ietf.org/html/rfc3986#section-4.3
+     * @param UriInterface $uri new request URI to use
+     * @param bool $preserveHost preserve the original state of the Host header
      * @return static
      */
     public function withUri(UriInterface $uri, $preserveHost = false)
@@ -447,7 +455,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * updated cookie values.
      *
-     * @param array $cookies Array of key/value pairs representing cookies.
+     * @param array $cookies array of key/value pairs representing cookies
      * @return static
      */
     public function withCookieParams(array $cookies)
@@ -493,8 +501,8 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * updated query string arguments.
      *
-     * @param array $query Array of query string arguments, typically from
-     *     $_GET.
+     * @param array $query array of query string arguments, typically from
+     *     $_GET
      * @return static
      */
     public function withQueryParams(array $query)
@@ -514,8 +522,8 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * These values MAY be prepared from $_FILES or the message body during
      * instantiation, or MAY be injected via withUploadedFiles().
      *
-     * @return array An array tree of UploadedFileInterface instances; an empty
-     *     array MUST be returned if no data is present.
+     * @return array an array tree of UploadedFileInterface instances; an empty
+     *     array MUST be returned if no data is present
      */
     public function getUploadedFiles()
     {
@@ -529,9 +537,9 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * immutability of the message, and MUST return an instance that has the
      * updated body parameters.
      *
-     * @param array $uploadedFiles An array tree of UploadedFileInterface instances.
+     * @param array $uploadedFiles an array tree of UploadedFileInterface instances
+     * @throws \InvalidArgumentException if an invalid structure is provided
      * @return static
-     * @throws \InvalidArgumentException if an invalid structure is provided.
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
@@ -585,9 +593,9 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      *
      * @param null|array|object $data The deserialized body data. This will
      *     typically be in an array or object.
-     * @return static
      * @throws \InvalidArgumentException if an unsupported argument type is
-     *     provided.
+     *     provided
+     * @return static
      */
     public function withParsedBody($data)
     {
@@ -606,7 +614,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * deserializing non-form-encoded message bodies; etc. Attributes
      * will be application and request specific, and CAN be mutable.
      *
-     * @return array Attributes derived from the request.
+     * @return array attributes derived from the request
      */
     public function getAttributes()
     {
@@ -624,8 +632,8 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * specifying a default value to return if the attribute is not found.
      *
      * @see getAttributes()
-     * @param string $name The attribute name.
-     * @param mixed $default Default value to return if the attribute does not exist.
+     * @param string $name the attribute name
+     * @param mixed $default default value to return if the attribute does not exist
      * @return mixed
      */
     public function getAttribute($name, $default = null)
@@ -644,8 +652,8 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * updated attribute.
      *
      * @see getAttributes()
-     * @param string $name The attribute name.
-     * @param mixed $value The value of the attribute.
+     * @param string $name the attribute name
+     * @param mixed $value the value of the attribute
      * @return static
      */
     public function withAttribute($name, $value)
@@ -667,7 +675,7 @@ abstract class AbstractRequestWrapper implements ServerRequestInterface, Request
      * the attribute.
      *
      * @see getAttributes()
-     * @param string $name The attribute name.
+     * @param string $name the attribute name
      * @return static
      */
     public function withoutAttribute($name)
