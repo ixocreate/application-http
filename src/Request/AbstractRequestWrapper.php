@@ -1,5 +1,5 @@
 <?php
-namespace KiwiSuite\ApplicationHttp\Request;
+namespace Ixocreate\ApplicationHttp\Request;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;

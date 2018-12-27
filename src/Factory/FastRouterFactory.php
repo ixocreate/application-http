@@ -9,10 +9,10 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Factory;
+namespace Ixocreate\ApplicationHttp\Factory;
 
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
 use Zend\Expressive\Router\FastRouteRouter;
 
 final class FastRouterFactory implements FactoryInterface

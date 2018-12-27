@@ -9,7 +9,7 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Pipe;
+namespace Ixocreate\ApplicationHttp\Pipe;
 
 use Zend\Stdlib\PriorityList;
 

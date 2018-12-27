@@ -10,14 +10,14 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\ApplicationHttp\ErrorHandling\Factory;
+namespace Ixocreate\ApplicationHttp\ErrorHandling\Factory;
 
-use KiwiSuite\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Template\Renderer;
+use Ixocreate\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Template\Renderer;
 use Zend\Diactoros\Response;
-use KiwiSuite\Config\Config;
+use Ixocreate\Config\Config;
 
 final class NotFoundHandlerFactory implements FactoryInterface
 {

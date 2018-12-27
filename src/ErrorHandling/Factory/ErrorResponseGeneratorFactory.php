@@ -10,14 +10,14 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\ApplicationHttp\ErrorHandling\Factory;
+namespace Ixocreate\ApplicationHttp\ErrorHandling\Factory;
 
-use KiwiSuite\ApplicationHttp\ErrorHandling\Response\ErrorResponseGenerator;
-use KiwiSuite\Application\ApplicationConfig;
-use KiwiSuite\Config\Config;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Template\Renderer;
+use Ixocreate\ApplicationHttp\ErrorHandling\Response\ErrorResponseGenerator;
+use Ixocreate\Application\ApplicationConfig;
+use Ixocreate\Config\Config;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Template\Renderer;
 use Zend\Expressive\Middleware\WhoopsErrorResponseGenerator;
 
 final class ErrorResponseGeneratorFactory implements FactoryInterface

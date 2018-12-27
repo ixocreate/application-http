@@ -9,15 +9,15 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Factory;
+namespace Ixocreate\ApplicationHttp\Factory;
 
-use KiwiSuite\Application\ApplicationConfig;
-use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
-use KiwiSuite\ApplicationHttp\Middleware\SegmentMiddlewarePipe;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Application\ApplicationConfig;
+use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
+use Ixocreate\ApplicationHttp\Middleware\SegmentMiddlewarePipe;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfigurator;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;

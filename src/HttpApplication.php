@@ -9,13 +9,13 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp;
+namespace Ixocreate\ApplicationHttp;
 
-use KiwiSuite\Application\ApplicationConfigurator;
-use KiwiSuite\Application\ApplicationInterface;
-use KiwiSuite\Application\Bootstrap;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
-use KiwiSuite\ServiceManager\ServiceManager;
+use Ixocreate\Application\ApplicationConfigurator;
+use Ixocreate\Application\ApplicationInterface;
+use Ixocreate\Application\Bootstrap;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfig;
+use Ixocreate\ServiceManager\ServiceManager;
 use Zend\HttpHandlerRunner\RequestHandlerRunner;
 
 final class HttpApplication implements ApplicationInterface

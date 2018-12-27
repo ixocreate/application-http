@@ -27,13 +27,13 @@
     },
     "autoload": {
         "psr-4": {
-            "KiwiSuite\\ApplicationHttp\\": "src/"
+            "Ixocreate\\ApplicationHttp\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "KiwiSuiteMisc\\ApplicationHttp\\": "tests/misc/",
-            "KiwiSuiteTest\\ApplicationHttp\\": "tests/src/"
+            "IxocreateMisc\\ApplicationHttp\\": "tests/misc/",
+            "IxocreateTest\\ApplicationHttp\\": "tests/src/"
         }
     }
 }

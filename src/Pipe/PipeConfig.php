@@ -9,9 +9,9 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Pipe;
+namespace Ixocreate\ApplicationHttp\Pipe;
 
-use KiwiSuite\Contract\Application\SerializableServiceInterface;
+use Ixocreate\Contract\Application\SerializableServiceInterface;
 
 final class PipeConfig implements SerializableServiceInterface
 {

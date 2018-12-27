@@ -9,11 +9,11 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\BootstrapItem;
+namespace Ixocreate\ApplicationHttp\BootstrapItem;
 
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
-use KiwiSuite\Contract\Application\BootstrapItemInterface;
-use KiwiSuite\Contract\Application\ConfiguratorInterface;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfigurator;
+use Ixocreate\Contract\Application\BootstrapItemInterface;
+use Ixocreate\Contract\Application\ConfiguratorInterface;
 
 final class PipeBootstrapItem implements BootstrapItemInterface
 {

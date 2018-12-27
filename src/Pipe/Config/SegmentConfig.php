@@ -1,7 +1,7 @@
 <?php
-namespace KiwiSuite\ApplicationHttp\Pipe\Config;
+namespace Ixocreate\ApplicationHttp\Pipe\Config;
 
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfig;
 
 final class SegmentConfig implements \Serializable
 {

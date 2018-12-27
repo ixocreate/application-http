@@ -9,9 +9,9 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Middleware;
+namespace Ixocreate\ApplicationHttp\Middleware;
 
-use KiwiSuite\ServiceManager\SubManager\SubManager;
+use Ixocreate\ServiceManager\SubManager\SubManager;
 
 final class MiddlewareSubManager extends SubManager
 {

@@ -10,9 +10,9 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\ApplicationHttp\ErrorHandling\Response;
+namespace Ixocreate\ApplicationHttp\ErrorHandling\Response;
 
-use KiwiSuite\Template\Renderer;
+use Ixocreate\Template\Renderer;
 use Throwable;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;

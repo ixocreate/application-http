@@ -9,22 +9,22 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Middleware\Factory;
+namespace Ixocreate\ApplicationHttp\Middleware\Factory;
 
 use function GuzzleHttp\Psr7\str;
-use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
-use KiwiSuite\ApplicationHttp\Middleware\SegmentMiddlewarePipe;
-use KiwiSuite\ApplicationHttp\Pipe\Config\DispatchingPipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\MiddlewareConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\RoutingPipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\SegmentConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\SegmentPipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfig;
-use KiwiSuite\Contract\Http\SegmentMiddlewareInterface;
-use KiwiSuite\Contract\Http\SegmentProviderInterface;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\ProjectUri\ProjectUri;
+use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
+use Ixocreate\ApplicationHttp\Middleware\SegmentMiddlewarePipe;
+use Ixocreate\ApplicationHttp\Pipe\Config\DispatchingPipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\MiddlewareConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\RoutingPipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\SegmentConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\SegmentPipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfig;
+use Ixocreate\Contract\Http\SegmentMiddlewareInterface;
+use Ixocreate\Contract\Http\SegmentProviderInterface;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;

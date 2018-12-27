@@ -10,11 +10,11 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\ApplicationHttp\ErrorHandling\Factory;
+namespace Ixocreate\ApplicationHttp\ErrorHandling\Factory;
 
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Config\Config;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Config\Config;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Run as Whoops;
 use Whoops\Util\Misc as WhoopsUtil;

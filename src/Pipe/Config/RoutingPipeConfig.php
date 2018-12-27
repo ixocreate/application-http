@@ -1,5 +1,5 @@
 <?php
-namespace KiwiSuite\ApplicationHttp\Pipe\Config;
+namespace Ixocreate\ApplicationHttp\Pipe\Config;
 
 
 final class RoutingPipeConfig

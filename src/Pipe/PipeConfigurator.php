@@ -9,15 +9,15 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Pipe;
+namespace Ixocreate\ApplicationHttp\Pipe;
 
-use KiwiSuite\ApplicationHttp\Pipe\Config\DispatchingPipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\MiddlewareConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\RoutingPipeConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\SegmentConfig;
-use KiwiSuite\ApplicationHttp\Pipe\Config\SegmentPipeConfig;
-use KiwiSuite\Contract\Application\ConfiguratorInterface;
-use KiwiSuite\Contract\Application\ServiceRegistryInterface;
+use Ixocreate\ApplicationHttp\Pipe\Config\DispatchingPipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\MiddlewareConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\RoutingPipeConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\SegmentConfig;
+use Ixocreate\ApplicationHttp\Pipe\Config\SegmentPipeConfig;
+use Ixocreate\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Contract\Application\ServiceRegistryInterface;
 use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Stdlib\PriorityList;
 

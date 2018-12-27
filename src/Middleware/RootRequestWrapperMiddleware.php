@@ -9,9 +9,9 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\ApplicationHttp\Middleware;
+namespace Ixocreate\ApplicationHttp\Middleware;
 
-use KiwiSuite\ApplicationHttp\Request\RootRequest;
+use Ixocreate\ApplicationHttp\Request\RootRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

@@ -10,11 +10,11 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\ApplicationHttp\ErrorHandling\Factory;
+namespace Ixocreate\ApplicationHttp\ErrorHandling\Factory;
 
-use KiwiSuite\ApplicationHttp\ErrorHandling\Response\ErrorResponseGenerator;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\ApplicationHttp\ErrorHandling\Response\ErrorResponseGenerator;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
