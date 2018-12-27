@@ -1,23 +1,23 @@
 {
-    "name": "kiwi-suite/application-http",
-    "description": "kiwi-suite/application-http",
+    "name": "ixocreate/application-http",
+    "description": "IXOCREATE application HTTP stack integration",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
-            "name": "Thomas Payer"
+            "name": "IXOCREATE"
         }
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": "^7.1",
-        "kiwi-suite/contract": "dev-develop",
+        "ixocreate/contract": "dev-develop",
         "zendframework/zend-expressive": "^3.0",
         "zendframework/zend-expressive-fastroute": "^3.0",
         "zendframework/zend-expressive-helpers": "^5.0",
         "zendframework/zend-diactoros": "^1.7",
-        "kiwi-suite/application": "dev-develop",
+        "ixocreate/application": "dev-develop",
         "filp/whoops": "^2.1"
     },
     "require-dev": {
@@ -35,5 +35,8 @@
             "IxocreateMisc\\ApplicationHttp\\": "tests/misc/",
             "IxocreateTest\\ApplicationHttp\\": "tests/src/"
         }
+    },
+    "scripts": {
+        "fix-cs": "vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --config vendor/ixocreate/coding-standard/.php_cs"
     }
 }
