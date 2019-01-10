@@ -12,12 +12,12 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.1",
-        "ixocreate/contract": "=1.0.0-alpha1",
+        "ixocreate/contract": "dev-develop",
         "zendframework/zend-expressive": "^3.0",
         "zendframework/zend-expressive-fastroute": "^3.0",
         "zendframework/zend-expressive-helpers": "^5.0",
         "zendframework/zend-diactoros": "^1.7",
-        "ixocreate/application": "=1.0.0-alpha1",
+        "ixocreate/application": "dev-develop",
         "filp/whoops": "^2.1"
     },
     "require-dev": {
