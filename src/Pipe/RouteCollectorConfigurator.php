@@ -41,10 +41,10 @@ class RouteCollectorConfigurator
      * @param string $path
      * @param string $action
      * @param string $name
-     * @param int|null $priority
+     * @param int|null $routePriority
      * @return RouteConfigurator
      */
-    public function any(string $path, string $action, string $name, int $priority = null): RouteConfigurator
+    public function any(string $path, string $action, string $name, int $routePriority = null): RouteConfigurator
     {
         $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enableDelete();
@@ -53,8 +53,8 @@ class RouteCollectorConfigurator
         $routeConfigurator->enablePatch();
         $routeConfigurator->enableDelete();
 
-        if ($priority !== null) {
-            $routeConfigurator->setPriority($priority);
+        if ($routePriority !== null) {
+            $routeConfigurator->setPriority($routePriority);
         }
 
         return $this->route($routeConfigurator);
@@ -64,16 +64,16 @@ class RouteCollectorConfigurator
      * @param string $path
      * @param string $action
      * @param string $name
-     * @param int|null $priority
+     * @param int|null $routePriority
      * @return RouteConfigurator
      */
-    public function get(string $path, string $action, string $name, int $priority = null): RouteConfigurator
+    public function get(string $path, string $action, string $name, int $routePriority = null): RouteConfigurator
     {
         $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enableGet();
 
-        if ($priority !== null) {
-            $routeConfigurator->setPriority($priority);
+        if ($routePriority !== null) {
+            $routeConfigurator->setPriority($routePriority);
         }
 
         return $this->route($routeConfigurator);
@@ -83,16 +83,16 @@ class RouteCollectorConfigurator
      * @param string $path
      * @param string $action
      * @param string $name
-     * @param int|null $priority
+     * @param int|null $routePriority
      * @return RouteConfigurator
      */
-    public function post(string $path, string $action, string $name, int $priority = null): RouteConfigurator
+    public function post(string $path, string $action, string $name, int $routePriority = null): RouteConfigurator
     {
         $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enablePost();
 
-        if ($priority !== null) {
-            $routeConfigurator->setPriority($priority);
+        if ($routePriority !== null) {
+            $routeConfigurator->setPriority($routePriority);
         }
 
         return $this->route($routeConfigurator);
@@ -102,16 +102,16 @@ class RouteCollectorConfigurator
      * @param string $path
      * @param string $action
      * @param string $name
-     * @param int|null $priority
+     * @param int|null $routePriority
      * @return RouteConfigurator
      */
-    public function patch(string $path, string $action, string $name, int $priority = null): RouteConfigurator
+    public function patch(string $path, string $action, string $name, int $routePriority = null): RouteConfigurator
     {
         $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enablePatch();
 
-        if ($priority !== null) {
-            $routeConfigurator->setPriority($priority);
+        if ($routePriority !== null) {
+            $routeConfigurator->setPriority($routePriority);
         }
 
         return $this->route($routeConfigurator);
@@ -121,16 +121,16 @@ class RouteCollectorConfigurator
      * @param string $path
      * @param string $action
      * @param string $name
-     * @param int|null $priority
+     * @param int|null $routePriority
      * @return RouteConfigurator
      */
-    public function put(string $path, string $action, string $name, int $priority = null): RouteConfigurator
+    public function put(string $path, string $action, string $name, int $routePriority = null): RouteConfigurator
     {
         $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enablePut();
 
-        if ($priority !== null) {
-            $routeConfigurator->setPriority($priority);
+        if ($routePriority !== null) {
+            $routeConfigurator->setPriority($routePriority);
         }
 
         return $this->route($routeConfigurator);
@@ -140,16 +140,16 @@ class RouteCollectorConfigurator
      * @param string $path
      * @param string $action
      * @param string $name
-     * @param int|null $priority
+     * @param int|null $routePriority
      * @return RouteConfigurator
      */
-    public function delete(string $path, string $action, string $name, int $priority = null): RouteConfigurator
+    public function delete(string $path, string $action, string $name, int $routePriority = null): RouteConfigurator
     {
         $routeConfigurator = new RouteConfigurator($path, $action, $name);
         $routeConfigurator->enableDelete();
 
-        if ($priority !== null) {
-            $routeConfigurator->setPriority($priority);
+        if ($routePriority !== null) {
+            $routeConfigurator->setPriority($routePriority);
         }
 
         return $this->route($routeConfigurator);
