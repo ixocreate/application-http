@@ -30,8 +30,8 @@ final class ErrorHandlerFactory implements FactoryInterface
         $generator = $container->has(ErrorResponseGenerator::class)
             ? function (
                 \Throwable $e,
-                        ServerRequestInterface $request,
-                        ResponseInterface $response
+                ServerRequestInterface $request,
+                ResponseInterface $response
             ) use ($container) {
                 $generator = $container->get(ErrorResponseGenerator::class);
                 return $generator($e, $request, $response);
